@@ -10,6 +10,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap');
         body { font-family: 'Kanit', sans-serif; background-color: #0f172a; color: #f8fafc; }
         .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .danger-glow { box-shadow: 0 0 15px rgba(239, 68, 68, 0.3); }
     </style>
 </head>
 <body class="p-4 md:p-8">
@@ -19,37 +20,62 @@
         <div class="flex justify-between items-center">
             <div>
                 <h1 class="text-2xl font-bold text-teal-400">HT SMART</h1>
-                <p class="text-[10px] text-slate-400 uppercase tracking-widest">Digital Health Passport</p>
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest">Takhli Hospital Innovation</p>
             </div>
             <div class="w-10 h-10 bg-teal-500 rounded-full flex items-center justify-center">
-                <i class="fa-solid fa-stethoscope text-white"></i>
+                <i class="fa-solid fa-id-card text-white"></i>
             </div>
         </div>
 
-        <!-- Patient Profile -->
-        <div class="glass-card rounded-3xl p-5 border-t-4 border-teal-500">
-            <div class="flex items-center gap-4 mb-3">
-                <div class="w-12 h-12 bg-slate-700 rounded-xl overflow-hidden border border-teal-400/30">
-                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Khemika" alt="avatar">
+        <!-- Section 1: Patient Dashboard (Scanner & Allergy) -->
+        <div class="glass-card rounded-3xl p-6 space-y-4 border-t-4 border-teal-500">
+            <div class="flex justify-between items-start">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 bg-slate-700 rounded-2xl overflow-hidden border border-teal-400/50">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Khemika" alt="avatar">
+                    </div>
+                    <div>
+                        <h2 id="patientName" class="text-lg font-semibold">คุณเขมิกา พงษ์ศรี</h2>
+                        <p id="patientHN" class="text-xs text-slate-400 italic">HN: 12345/69</p>
+                    </div>
                 </div>
-                <div>
-                    <h2 class="text-md font-semibold">คุณเขมิกา พงษ์ศรี</h2>
-                    <p class="text-[10px] text-slate-400 italic">เป้าหมาย: < 135/85 mmHg (HBPM)</p>
+                <button onclick="triggerScanner()" class="bg-slate-700 text-teal-400 px-3 py-1.5 rounded-xl text-[10px] hover:bg-slate-600 transition-all border border-teal-400/30 font-medium">
+                    <i class="fa-solid fa-expand mr-1"></i> สแกนข้อมูล
+                </button>
+            </div>
+
+            <!-- Allergy Alert Area -->
+            <div id="allergyBox" class="bg-red-500/10 border border-red-500/30 p-4 rounded-2xl relative">
+                <div class="flex items-start gap-3">
+                    <i class="fa-solid fa-circle-exclamation text-red-500 text-lg mt-1"></i>
+                    <div class="flex-1">
+                        <p class="text-[10px] text-red-300 font-bold uppercase tracking-wider mb-1">ประวัติแพ้ยา (Safety First)</p>
+                        <p id="allergyInfo" class="text-sm font-medium text-white italic">รอการสแกนข้อมูลจากพยาบาล...</p>
+                        
+                        <div id="verifyZone" class="mt-3 pt-3 border-t border-red-500/20 flex justify-between items-center">
+                            <p class="text-[9px] text-red-400 font-light italic">⚠️ ห้ามผู้ป่วยเพิ่มรายการเอง</p>
+                            <button id="btnNurseConfirm" onclick="nurseConfirm()" class="bg-red-600 hover:bg-red-500 text-white text-[10px] px-3 py-1.5 rounded-lg font-bold shadow-lg transition-all hidden">
+                                <i class="fa-solid fa-user-nurse mr-1"></i> พยาบาลกดยืนยัน
+                            </button>
+                            <div id="confirmedLabel" class="hidden text-green-400 text-[10px] font-bold">
+                                <i class="fa-solid fa-circle-check mr-1"></i> ตรวจสอบแล้วโดยพยาบาล
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- 2-2-7 Recording -->
+        <!-- Section 2: 2-2-7 Blood Pressure Recording -->
         <div class="glass-card rounded-3xl p-6">
             <h3 class="text-sm font-semibold mb-4 text-teal-300 uppercase tracking-wider">
                 <i class="fa-solid fa-heart-pulse mr-2"></i> บันทึกความดัน (สูตร 2-2-7)
             </h3>
             
             <div class="space-y-4">
-                <!-- Select Period -->
-                <div class="flex gap-2 p-1 bg-slate-800 rounded-xl">
-                    <button onclick="setTime('morning')" id="btnMorning" class="w-1/2 py-2 rounded-lg bg-teal-600 text-white text-sm transition-all">ช่วงเช้า</button>
-                    <button onclick="setTime('evening')" id="btnEvening" class="w-1/2 py-2 rounded-lg text-slate-400 text-sm transition-all">ช่วงเย็น</button>
+                <div class="flex gap-2 p-1 bg-slate-800 rounded-xl border border-slate-700">
+                    <button onclick="setTime('morning')" id="btnMorning" class="w-1/2 py-2 rounded-lg bg-teal-600 text-white text-sm font-medium transition-all">ช่วงเช้า</button>
+                    <button onclick="setTime('evening')" id="btnEvening" class="w-1/2 py-2 rounded-lg text-slate-400 text-sm font-medium transition-all">ช่วงเย็น</button>
                 </div>
 
                 <div class="flex gap-2">
@@ -57,22 +83,21 @@
                     <input type="number" id="diaIn" placeholder="ตัวล่าง" class="w-1/2 bg-slate-800 border border-slate-700 rounded-xl p-3 text-center text-white focus:border-teal-400 outline-none text-xl">
                 </div>
                 <button onclick="addBPRecord()" class="w-full bg-teal-600 hover:bg-teal-500 p-3 rounded-xl font-bold transition-all shadow-lg">
-                    บันทึกผล
+                    บันทึกค่าตอนนี้
                 </button>
             </div>
 
-            <!-- List of Records -->
             <div class="mt-6 grid grid-cols-2 gap-4 border-t border-slate-700 pt-4">
                 <div>
-                    <p class="text-[10px] text-teal-400 mb-2 font-bold"><i class="fa-solid fa-sun mr-1"></i> รายการเช้า</p>
+                    <p class="text-[10px] text-teal-400 mb-2 font-bold uppercase"><i class="fa-solid fa-sun mr-1"></i> รายการเช้า</p>
                     <ul id="listMorning" class="text-[10px] space-y-1">
-                        <li class="text-slate-600 italic font-light">ไม่มีข้อมูล</li>
+                        <li class="text-slate-600 italic">ไม่มีข้อมูล</li>
                     </ul>
                 </div>
                 <div>
-                    <p class="text-[10px] text-orange-400 mb-2 font-bold"><i class="fa-solid fa-moon mr-1"></i> รายการเย็น</p>
+                    <p class="text-[10px] text-orange-400 mb-2 font-bold uppercase"><i class="fa-solid fa-moon mr-1"></i> รายการเย็น</p>
                     <ul id="listEvening" class="text-[10px] space-y-1">
-                        <li class="text-slate-600 italic font-light">ไม่มีข้อมูล</li>
+                        <li class="text-slate-600 italic">ไม่มีข้อมูล</li>
                     </ul>
                 </div>
             </div>
@@ -80,20 +105,54 @@
             <!-- Double Average Summary -->
             <div id="resultBox" class="mt-6 grid grid-cols-2 gap-3 hidden">
                 <div class="bg-slate-800/80 p-3 rounded-2xl border border-teal-500/30 text-center">
-                    <p class="text-[9px] text-slate-400 mb-1 italic">เฉลี่ยช่วงเช้า</p>
-                    <div id="avgMorning" class="text-xl font-bold text-teal-400">--/--</div>
+                    <p class="text-[9px] text-slate-400 mb-1 italic tracking-tight">เฉลี่ยช่วงเช้า</p>
+                    <div id="avgMorning" class="text-xl font-bold text-teal-400 tracking-tighter">--/--</div>
                     <p id="adviceMorning" class="text-[8px] mt-1"></p>
                 </div>
                 <div class="bg-slate-800/80 p-3 rounded-2xl border border-orange-500/30 text-center">
-                    <p class="text-[9px] text-slate-400 mb-1 italic">เฉลี่ยช่วงเย็น</p>
-                    <div id="avgEvening" class="text-xl font-bold text-orange-400">--/--</div>
+                    <p class="text-[9px] text-slate-400 mb-1 italic tracking-tight">เฉลี่ยช่วงเย็น</p>
+                    <div id="avgEvening" class="text-xl font-bold text-orange-400 tracking-tighter">--/--</div>
                     <p id="adviceEvening" class="text-[8px] mt-1"></p>
                 </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Medication Photo -->
+        <div class="glass-card rounded-3xl p-6">
+            <h3 class="text-sm font-semibold mb-4 flex items-center gap-2 text-slate-300 uppercase">
+                <i class="fa-solid fa-camera"></i> ถ่ายรูปซองยา
+            </h3>
+            <div class="border-2 border-dashed border-slate-700 rounded-2xl p-6 text-center cursor-pointer hover:border-teal-400" onclick="document.getElementById('medImage').click()">
+                <i class="fa-solid fa-plus text-2xl text-slate-600 mb-2"></i>
+                <p class="text-xs text-slate-500">คลิกเพื่อถ่ายรูปหน้าซองยา</p>
+                <input type="file" id="medImage" class="hidden" accept="image/*" capture="environment" onchange="previewImage(event)">
+            </div>
+            <div id="imagePreview" class="mt-4 hidden">
+                <img id="previewImg" src="#" class="rounded-xl w-full border border-slate-700">
             </div>
         </div>
     </div>
 
     <script>
+        // --- 1. Scanner & Nurse Logic ---
+        function triggerScanner() {
+            alert("กำลังเปิดกล้องสแกนข้อมูลจากระบบ HIS...");
+            setTimeout(() => {
+                document.getElementById('allergyInfo').innerText = "แพ้ยา: Penicillin (อาการ: ผื่นคัน)";
+                document.getElementById('btnNurseConfirm').classList.remove('hidden');
+                document.getElementById('allergyBox').classList.add('danger-glow');
+            }, 1000);
+        }
+
+        function nurseConfirm() {
+            if(confirm("ยืนยันข้อมูล HN และประวัติแพ้ยา?")) {
+                document.getElementById('btnNurseConfirm').classList.add('hidden');
+                document.getElementById('confirmedLabel').classList.remove('hidden');
+                document.getElementById('allergyBox').classList.replace('border-red-500/30', 'border-green-500/40');
+            }
+        }
+
+        // --- 2. 2-2-7 Logic ---
         let currentPeriod = 'morning';
         let bpData = { morning: [], evening: [] };
 
@@ -113,15 +172,12 @@
         function addBPRecord() {
             const sys = parseInt(document.getElementById('sysIn').value);
             const dia = parseInt(document.getElementById('diaIn').value);
-
             if (sys && dia) {
                 bpData[currentPeriod].push({ sys, dia });
                 renderList();
                 calculateDualAverage();
                 document.getElementById('sysIn').value = '';
                 document.getElementById('diaIn').value = '';
-            } else {
-                alert("กรุณากรอกข้อมูลให้ครบนะคะ");
             }
         }
 
@@ -129,8 +185,8 @@
             ['morning', 'evening'].forEach(period => {
                 const list = document.getElementById(`list${period.charAt(0).toUpperCase() + period.slice(1)}`);
                 list.innerHTML = bpData[period].map(item => 
-                    `<li class="bg-slate-800/40 p-1 rounded-lg border-l-2 ${period === 'morning' ? 'border-teal-500' : 'border-orange-500'} flex justify-around">
-                        <span class="font-bold text-slate-200">${item.sys}/${item.dia}</span>
+                    `<li class="bg-slate-800/40 p-1 rounded-lg border-l-2 ${period === 'morning' ? 'border-teal-500' : 'border-orange-500'} text-center font-bold text-slate-300">
+                        ${item.sys}/${item.dia}
                     </li>`
                 ).join('') || '<li class="text-slate-600 italic font-light">ไม่มีข้อมูล</li>';
             });
@@ -138,26 +194,27 @@
 
         function calculateDualAverage() {
             document.getElementById('resultBox').classList.remove('hidden');
-            
             ['morning', 'evening'].forEach(period => {
                 const data = bpData[period];
-                const resText = document.getElementById(`avg${period.charAt(0).toUpperCase() + period.slice(1)}`);
-                const advice = document.getElementById(`advice${period.charAt(0).toUpperCase() + period.slice(1)}`);
-                
                 if (data.length > 0) {
                     const avgSys = Math.round(data.reduce((a, b) => a + b.sys, 0) / data.length);
                     const avgDia = Math.round(data.reduce((a, b) => a + b.dia, 0) / data.length);
-                    resText.innerText = `${avgSys} / ${avgDia}`;
-                    
-                    if (avgSys < 135 && avgDia < 85) {
-                        advice.innerText = "ปกติค่ะ";
-                        advice.className = "text-[8px] mt-1 text-green-400";
-                    } else {
-                        advice.innerText = "ค่อนข้างสูง";
-                        advice.className = "text-[8px] mt-1 text-yellow-400";
-                    }
+                    document.getElementById(`avg${period.charAt(0).toUpperCase() + period.slice(1)}`).innerText = `${avgSys}/${avgDia}`;
+                    const adv = document.getElementById(`advice${period.charAt(0).toUpperCase() + period.slice(1)}`);
+                    if (avgSys < 135 && avgDia < 85) { adv.innerText = "ปกติ"; adv.className = "text-[8px] text-green-400"; }
+                    else { adv.innerText = "สูง"; adv.className = "text-[8px] text-yellow-400"; }
                 }
             });
+        }
+
+        // --- 3. Image Logic ---
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                document.getElementById('previewImg').src = reader.result;
+                document.getElementById('imagePreview').classList.remove('hidden');
+            }
+            reader.readAsDataURL(event.target.files[0]);
         }
     </script>
 </body>
