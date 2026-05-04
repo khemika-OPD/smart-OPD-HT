@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -76,11 +77,11 @@
                 
                 <div class="grid grid-cols-2 gap-2 mb-4">
                     <div class="bg-slate-800/80 p-2 rounded-xl text-center border border-teal-500/20">
-                        <p class="text-[8px] text-slate-400 uppercase">เฉลี่ยเช้า (7 วัน)</p>
+                        <p class="text-[8px] text-slate-400 uppercase">เฉลี่ยเช้า (7 วันล่าสุด)</p>
                         <p id="avgM" class="text-sm font-bold text-teal-400">--/--</p>
                     </div>
                     <div class="bg-slate-800/80 p-2 rounded-xl text-center border border-yellow-500/20">
-                        <p class="text-[8px] text-slate-400 uppercase">เฉลี่ยเย็น (7 วัน)</p>
+                        <p class="text-[8px] text-slate-400 uppercase">เฉลี่ยเย็น (7 วันล่าสุด)</p>
                         <p id="avgE" class="text-sm font-bold text-yellow-400">--/--</p>
                     </div>
                 </div>
@@ -118,7 +119,7 @@
         let myChart;
 
         function initApp() {
-            const saved = localStorage.getItem('ht_final_v7');
+            const saved = localStorage.getItem('ht_final_comprehensive');
             if(saved) db = JSON.parse(saved);
             updateUI();
         }
@@ -151,7 +152,7 @@
                 else if(currentP === 'morning') db.home_m.push(entry);
                 else db.home_e.push(entry);
                 
-                localStorage.setItem('ht_final_v7', JSON.stringify(db));
+                localStorage.setItem('ht_final_comprehensive', JSON.stringify(db));
                 updateUI();
                 alert("บันทึกสำเร็จ!");
                 document.getElementById('hSys').value = ''; document.getElementById('hDia').value = '';
@@ -174,7 +175,8 @@
             const ctx = document.getElementById('bpChart').getContext('2d');
             if(myChart) myChart.destroy();
 
-            let labels = [...new Set([...db.hospital, ...db.home_m, ...db.home_e].map(x => x.date))].slice(-7);
+            let allDates = [...new Set([...db.hospital, ...db.home_m, ...db.home_e].map(x => x.date))];
+            let labels = allDates.sort().slice(-7);
             if (!labels.length) labels = [new Date().toLocaleDateString('th-TH')];
 
             const getDailyAvg = (dataArr, labelDate) => {
@@ -190,7 +192,7 @@
                         { label: 'รพ.', data: labels.map(l => getDailyAvg(db.hospital, l)), borderColor: '#ef4444', backgroundColor: '#ef4444', pointStyle: 'rectRot', radius: 6, spanGaps: true },
                         { label: 'เช้า', data: labels.map(l => getDailyAvg(db.home_m, l)), borderColor: '#4ade80', backgroundColor: '#4ade80', tension: 0.3, spanGaps: true },
                         { label: 'เย็น', data: labels.map(l => getDailyAvg(db.home_e, l)), borderColor: '#facc15', backgroundColor: '#facc15', tension: 0.3, spanGaps: true },
-                        { label: 'เป้าหมาย', data: Array(labels.length).fill(135), borderColor: '#ffffff', borderDash: [5, 5], pointRadius: 0, fill: false }
+                        { label: 'เป้าหมาย', data: Array(labels.length).fill(135), borderColor: '#ffffff', borderDash: [5, 5], borderWidth: 2, pointRadius: 0, fill: false }
                     ]
                 },
                 options: {
