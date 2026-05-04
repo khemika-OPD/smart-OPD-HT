@@ -9,19 +9,18 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap');
-        body { font-family: 'Kanit', sans-serif; background-color: #0f172a; color: #f8fafc; overflow-x: hidden; }
+        body { font-family: 'Kanit', sans-serif; background-color: #0f172a; color: #f8fafc; }
         .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .danger-glow { border: 1px solid rgba(239, 68, 68, 0.5); box-shadow: 0 0 10px rgba(239, 68, 68, 0.2); }
-        .input-dark { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 0.75rem; padding: 0.5rem; width: 100%; color: white; outline: none; }
-        .input-dark:focus { border-color: #2dd4bf; }
+        .danger-glow { border: 2px solid #ef4444; box-shadow: 0 0 15px rgba(239, 68, 68, 0.3); }
+        .input-dark { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 0.75rem; padding: 0.6rem; width: 100%; color: white; outline: none; font-size: 12px; }
     </style>
 </head>
 <body class="p-4" onload="initApp()">
 
-    <div class="max-w-md mx-auto space-y-4 pb-20">
+    <div class="max-w-md mx-auto space-y-4 pb-24">
         
-        <!-- ส่วนหัว: ข้อมูลพื้นฐาน & สแกนยา -->
-        <div class="glass-card rounded-3xl p-5 border-t-4 border-teal-500 space-y-4">
+        <!-- ส่วนหัว: Profile & Patient Safety -->
+        <div class="glass-card rounded-3xl p-5 border-t-4 border-teal-500 space-y-3">
             <div class="flex justify-between items-start">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 bg-slate-700 rounded-xl overflow-hidden border border-teal-500/50">
@@ -29,40 +28,49 @@
                     </div>
                     <div>
                         <h2 class="text-md font-bold italic text-teal-400">HT SMART CONTROL</h2>
-                        <p class="text-[10px]">คุณเขมิกา พงษ์ศรี | HN: 12345/69</p>
+                        <p class="text-[10px]">พว. เขมิกา พงษ์ศรี | HN: 12345/69</p>
                     </div>
                 </div>
-                <button onclick="triggerScanner()" class="text-teal-400 border border-teal-400/30 px-3 py-1 rounded-lg text-[10px] hover:bg-teal-400/10">
-                    <i class="fa-solid fa-qrcode mr-1"></i> สแกนยา/ข้อมูล
-                </button>
+                <div class="flex flex-col gap-1">
+                    <button onclick="triggerScanner()" class="text-teal-400 border border-teal-400/30 px-2 py-1 rounded-lg text-[9px]">
+                        <i class="fa-solid fa-qrcode mr-1"></i> สแกนข้อมูล
+                    </button>
+                    <button onclick="addMedManual()" class="text-slate-400 border border-slate-400/30 px-2 py-1 rounded-lg text-[9px]">
+                        <i class="fa-solid fa-plus mr-1"></i> เพิ่มยา/ยาเหลือ
+                    </button>
+                </div>
             </div>
 
-            <!-- โรคประจำตัว (ช่องบันทึก) -->
+            <!-- ช่องบันทึกโรคประจำตัว -->
             <div class="space-y-1">
-                <label class="text-[9px] text-slate-400 uppercase font-bold tracking-wider ml-1">โรคประจำตัว (Medical History)</label>
-                <input type="text" id="comorbidity" placeholder="เช่น DM, DLP, CKD..." class="input-dark text-xs" onchange="saveBasicInfo()">
+                <label class="text-[9px] text-slate-400 font-bold ml-1 uppercase">โรคประจำตัว (Comorbidity)</label>
+                <input type="text" id="comorbidity" placeholder="เช่น DM, DLP, CKD..." class="input-dark" onchange="saveInfo()">
             </div>
 
-            <!-- รายการยา & แพ้ยา -->
-            <div id="allergyBox" class="hidden bg-red-500/10 p-2 rounded-xl border border-red-500/20 flex items-center gap-2">
-                <i class="fa-solid fa-triangle-exclamation text-red-500 text-[10px]"></i>
-                <span id="allergyText" class="text-[9px] text-red-200 italic font-bold"></span>
-            </div>
-
-            <div id="medListContainer" class="hidden bg-slate-800/50 rounded-xl p-3 space-y-2 border border-slate-700">
-                <p class="text-[10px] font-bold text-teal-400 border-b border-slate-700 pb-1"><i class="fa-solid fa-pills mr-1"></i> รายการยาปัจจุบัน (Current Medications)</p>
-                <div id="medList" class="text-[9px] space-y-1 text-slate-300"></div>
+            <!-- ช่องบันทึกการแพ้ยา (Allergy Section) -->
+            <div class="space-y-1">
+                <label class="text-[9px] text-red-400 font-bold ml-1 uppercase">ประวัติการแพ้ยา (Drug Allergy)</label>
+                <input type="text" id="allergyInput" placeholder="ระบุชื่อยาที่แพ้ (ถ้ามี)..." class="input-dark border-red-500/30 focus:border-red-500" onchange="saveInfo()">
             </div>
         </div>
 
-        <!-- กราฟ (ซ่อน/แสดง) -->
+        <!-- รายการยาปัจจุบัน & ยาที่เหลือ (Medication List) -->
+        <div id="medContainer" class="glass-card rounded-3xl p-4 hidden border-l-4 border-teal-400">
+            <div class="flex justify-between items-center mb-2">
+                <h3 class="text-[11px] font-bold text-teal-400 italic">CURRENT MEDICATION & REMAINING</h3>
+                <span class="text-[8px] text-slate-400">*นำยาที่เหลือมาพบแพทย์*</span>
+            </div>
+            <div id="medList" class="space-y-2 max-h-48 overflow-y-auto pr-2"></div>
+        </div>
+
+        <!-- Trend Chart (4 Colors) -->
         <div class="glass-card rounded-3xl p-4">
             <button onclick="toggleGraph()" class="w-full flex justify-between items-center text-teal-300 font-semibold text-xs">
-                <span><i class="fa-solid fa-chart-line mr-2"></i> สถิติแนวโน้ม (Trend Chart)</span>
+                <span><i class="fa-solid fa-chart-line mr-2"></i> สถิติแนวโน้ม (Control Chart)</span>
                 <i id="graphIcon" class="fa-solid fa-chevron-down"></i>
             </button>
-            <div id="graphSection" class="hidden mt-4 space-y-3">
-                <div class="h-52 w-full"><canvas id="bpChart"></canvas></div>
+            <div id="graphSection" class="hidden mt-3 space-y-3">
+                <div class="h-48 w-full"><canvas id="bpChart"></canvas></div>
                 <div class="grid grid-cols-2 gap-y-1 text-[8px] border-t border-slate-800 pt-2 px-1">
                     <span class="flex items-center gap-1"><i class="fa-solid fa-circle text-red-500"></i> รพ. (OBP)</span>
                     <span class="flex items-center gap-1"><i class="fa-solid fa-circle text-[#4ade80]"></i> เฉลี่ยบ้าน-เช้า</span>
@@ -72,17 +80,16 @@
             </div>
         </div>
 
-        <!-- บันทึกความดัน -->
+        <!-- BP Recording (2-2-7) -->
         <div class="space-y-3">
-            <div class="glass-card rounded-3xl p-5 border-l-4 border-teal-500">
-                <h3 class="text-[11px] font-bold text-teal-400 mb-3 italic">HOME RECORDING (2-2-7)</h3>
-                <div class="grid grid-cols-2 gap-2 mb-4">
+            <div class="glass-card rounded-3xl p-4 border-l-4 border-teal-500">
+                <div class="grid grid-cols-2 gap-2 mb-3">
                     <div class="bg-slate-800/80 p-2 rounded-xl text-center border border-teal-500/20">
-                        <p class="text-[8px] text-slate-400 uppercase">เฉลี่ยเช้า (7 วัน)</p>
+                        <p class="text-[8px] text-slate-400 uppercase">เฉลี่ยเช้า</p>
                         <p id="avgM" class="text-sm font-bold text-teal-400">--/--</p>
                     </div>
                     <div class="bg-slate-800/80 p-2 rounded-xl text-center border border-yellow-500/20">
-                        <p class="text-[8px] text-slate-400 uppercase">เฉลี่ยเย็น (7 วัน)</p>
+                        <p class="text-[8px] text-slate-400 uppercase">เฉลี่ยเย็น</p>
                         <p id="avgE" class="text-sm font-bold text-yellow-400">--/--</p>
                     </div>
                 </div>
@@ -94,54 +101,80 @@
                     <input type="number" id="sysIn" placeholder="SYS" class="w-1/2 bg-slate-800 border border-slate-700 rounded-xl p-3 text-center text-white outline-none">
                     <input type="number" id="diaIn" placeholder="DIA" class="w-1/2 bg-slate-800 border border-slate-700 rounded-xl p-3 text-center text-white outline-none">
                 </div>
-                <button onclick="addRec('home')" class="w-full bg-teal-600 p-3 rounded-xl text-xs font-bold">บันทึกค่าบ้าน</button>
+                <button onclick="addRec('home')" class="w-full bg-teal-600 p-3 rounded-xl text-xs font-bold shadow-lg">บันทึกค่าบ้าน</button>
             </div>
             
-            <div class="glass-card rounded-3xl p-5 border-l-4 border-red-500">
-                <h3 class="text-[11px] font-bold text-red-400 mb-2 italic">Hospital (คัดกรอง รพ.)</h3>
-                <div class="flex gap-2">
-                    <input type="number" id="hSys" placeholder="SYS" class="w-1/2 bg-slate-800 border border-slate-700 rounded-xl p-2 text-center text-white outline-none">
-                    <input type="number" id="hDia" placeholder="DIA" class="w-1/2 bg-slate-800 border border-slate-700 rounded-xl p-2 text-center text-white outline-none">
-                </div>
-                <button onclick="addRec('hospital')" class="w-full mt-2 bg-red-600/80 p-2 rounded-xl text-[10px] font-bold">บันทึกค่า รพ.</button>
-            </div>
+            <button onclick="addRec('hospital')" class="w-full bg-red-600/20 border border-red-500/30 p-2 rounded-xl text-[10px] text-red-400 font-bold italic uppercase">+ บันทึกค่าโรงพยาบาล</button>
         </div>
 
-        <button onclick="toggleHistory()" class="w-full py-2 text-[10px] text-slate-500 italic"><i class="fa-solid fa-eraser mr-1"></i> ดูประวัติ/แก้ไขค่าที่พิมพ์ผิด</button>
+        <!-- History & Delete Button -->
+        <button onclick="toggleHistory()" class="w-full py-2 text-[10px] text-slate-500 italic"><i class="fa-solid fa-list-ul mr-1"></i> ตรวจสอบประวัติ/ลบข้อมูลผิด</button>
         <div id="historyList" class="hidden glass-card rounded-2xl p-4 text-[9px] max-h-48 overflow-y-auto space-y-2"></div>
+
     </div>
 
     <script>
-        let db = { hospital: [], home_m: [], home_e: [], info: { comorbidity: "" } };
+        let db = { hospital: [], home_m: [], home_e: [], info: { com: "", alr: "", meds: [] } };
         let currentP = 'morning';
         let myChart;
 
         function initApp() {
-            const saved = localStorage.getItem('ht_final_v10');
+            const saved = localStorage.getItem('ht_smart_v11');
             if(saved) db = JSON.parse(saved);
-            document.getElementById('comorbidity').value = db.info.comorbidity || "";
+            document.getElementById('comorbidity').value = db.info.com || "";
+            document.getElementById('allergyInput').value = db.info.alr || "";
+            renderMeds();
             updateUI();
         }
 
-        function triggerScanner() {
-            // จำลองข้อมูลยาจากการสแกน
-            const meds = [
-                "1. Amlodipine (5 mg) - 1 tab oral OD pc (Morning)",
-                "2. Losartan (50 mg) - 1 tab oral OD pc (Morning)",
-                "3. Metformin (500 mg) - 1 tab oral bid pc (Morning/Evening)"
-            ];
-            document.getElementById('medListContainer').classList.remove('hidden');
-            document.getElementById('medList').innerHTML = meds.map(m => `<div>${m}</div>`).join('');
-            
-            document.getElementById('allergyText').innerText = "แพ้ยา: Penicillin (ผื่นคัน)";
-            document.getElementById('allergyBox').classList.remove('hidden');
-            document.getElementById('allergyBox').classList.add('danger-glow');
-            alert("สแกนรายการยาสำเร็จ!");
+        function saveInfo() {
+            db.info.com = document.getElementById('comorbidity').value;
+            db.info.alr = document.getElementById('allergyInput').value;
+            localStorage.setItem('ht_smart_v11', JSON.stringify(db));
         }
 
-        function saveBasicInfo() {
-            db.info.comorbidity = document.getElementById('comorbidity').value;
-            localStorage.setItem('ht_final_v10', JSON.stringify(db));
+        function triggerScanner() {
+            const scanData = [
+                { n: "Amlodipine (5mg)", r: "14" },
+                { n: "Metformin (500mg)", r: "20" }
+            ];
+            scanData.forEach(m => db.info.meds.push({ id: Date.now()+Math.random(), n: m.n, r: m.r }));
+            saveAndRefMed();
+            alert("สแกนและดึงข้อมูลยาสำเร็จ!");
+        }
+
+        function addMedManual() {
+            const name = prompt("ระบุชื่อยาและขนาด:");
+            const rem = prompt("ระบุจำนวนเม็ดยาที่เหลือ:");
+            if(name) {
+                db.info.meds.push({ id: Date.now(), n: name, r: rem || "0" });
+                saveAndRefMed();
+            }
+        }
+
+        function saveAndRefMed() {
+            localStorage.setItem('ht_smart_v11', JSON.stringify(db));
+            renderMeds();
+        }
+
+        function renderMeds() {
+            const cont = document.getElementById('medContainer');
+            const list = document.getElementById('medList');
+            if(db.info.meds.length > 0) {
+                cont.classList.remove('hidden');
+                list.innerHTML = db.info.meds.map((m, i) => `
+                    <div class="flex justify-between items-center text-[10px] bg-slate-800/40 p-2 rounded-lg">
+                        <span class="flex-1">${i+1}. <b>${m.n}</b></span>
+                        <span class="text-orange-400 font-bold px-3">เหลือ: ${m.r} เม็ด</span>
+                        <button onclick="delMed(${m.id})" class="text-red-500"><i class="fa-solid fa-circle-xmark"></i></button>
+                    </div>
+                `).join('');
+            } else cont.classList.add('hidden');
+        }
+
+        function delMed(id) {
+            db.info.meds = db.info.meds.filter(m => m.id !== id);
+            saveAndRefMed();
         }
 
         function toggleGraph() {
@@ -155,43 +188,34 @@
         function setPeriod(p) {
             currentP = p;
             document.getElementById('btnM').className = p === 'morning' ? "w-1/2 py-1.5 rounded-lg bg-teal-600 text-white text-[10px]" : "w-1/2 py-1.5 rounded-lg text-slate-400 text-[10px]";
-            document.getElementById('btnE').className = p === 'evening' ? "w-1/2 py-1.5 rounded-lg bg-[#f97316] text-white text-[10px]" : "w-1/2 py-1.5 rounded-lg text-slate-400 text-[10px]";
+            document.getElementById('btnE').className = p === 'evening' ? "w-1/2 py-1.5 rounded-lg bg-orange-600 text-white text-[10px]" : "w-1/2 py-1.5 rounded-lg text-slate-400 text-[10px]";
         }
 
         function addRec(type) {
-            const sys = type === 'hospital' ? document.getElementById('hSys').value : document.getElementById('sysIn').value;
-            const dia = type === 'hospital' ? document.getElementById('hDia').value : document.getElementById('diaIn').value;
+            let sys, dia;
+            if(type === 'hospital') {
+                sys = prompt("SYS (Hospital):"); dia = prompt("DIA (Hospital):");
+            } else {
+                sys = document.getElementById('sysIn').value; dia = document.getElementById('diaIn').value;
+            }
             if(sys && dia) {
                 const entry = { id: Date.now(), s: parseInt(sys), d: parseInt(dia), date: new Date().toLocaleDateString('th-TH') };
                 if(type === 'hospital') db.hospital.push(entry);
-                else if(currentP === 'morning') db.home_m.push(entry);
-                else db.home_e.push(entry);
-                saveAndRefresh();
+                else (currentP === 'morning' ? db.home_m : db.home_e).push(entry);
+                localStorage.setItem('ht_smart_v11', JSON.stringify(db));
+                updateUI();
+                document.getElementById('sysIn').value = ''; document.getElementById('diaIn').value = '';
             }
-        }
-
-        function deleteItem(type, id) {
-            if(confirm("ลบข้อมูลนี้?")) {
-                db[type] = db[type].filter(i => i.id !== id);
-                saveAndRefresh();
-            }
-        }
-
-        function saveAndRefresh() {
-            localStorage.setItem('ht_final_v10', JSON.stringify(db));
-            updateUI();
-            if(!document.getElementById('historyList').classList.contains('hidden')) renderHistory();
-            document.querySelectorAll('input:not(#comorbidity)').forEach(i => i.value = '');
         }
 
         function updateUI() {
-            const calc = (arr) => {
-                const last7 = arr.slice(-7);
-                if(!last7.length) return "--/--";
-                return Math.round(last7.reduce((a,b)=>a+b.s,0)/last7.length) + "/" + Math.round(last7.reduce((a,b)=>a+b.d,0)/last7.length);
+            const c = (arr) => {
+                const l = arr.slice(-7);
+                if(!l.length) return "--/--";
+                return Math.round(l.reduce((a,b)=>a+b.s,0)/l.length) + "/" + Math.round(l.reduce((a,b)=>a+b.d,0)/l.length);
             };
-            document.getElementById('avgM').innerText = calc(db.home_m);
-            document.getElementById('avgE').innerText = calc(db.home_e);
+            document.getElementById('avgM').innerText = c(db.home_m);
+            document.getElementById('avgE').innerText = c(db.home_e);
             if(!document.getElementById('graphSection').classList.contains('hidden')) renderChart();
         }
 
@@ -200,35 +224,41 @@
             if(myChart) myChart.destroy();
             let labels = [...new Set([...db.hospital, ...db.home_m, ...db.home_e].map(x => x.date))].sort().slice(-7);
             if(!labels.length) labels = [new Date().toLocaleDateString('th-TH')];
-            const getAvg = (arr, date) => {
-                const d = arr.filter(x => x.date === date);
-                return d.length ? d.reduce((a,b)=>a+b.s,0)/d.length : null;
+            const getV = (arr, d) => {
+                const f = arr.filter(x => x.date === d);
+                return f.length ? f.reduce((a,b)=>a+b.s,0)/f.length : null;
             };
             myChart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: labels,
                     datasets: [
-                        { label: 'เป้าหมาย', data: Array(labels.length).fill(135), borderColor: '#00ffff', borderWidth: 2, borderDash: [5, 5], pointRadius: 0, fill: false, order: 0 },
-                        { label: 'รพ.', data: labels.map(l => getAvg(db.hospital, l)), borderColor: '#ef4444', backgroundColor: '#ef4444', pointStyle: 'rectRot', radius: 6, spanGaps: true, order: 1 },
-                        { label: 'เช้า', data: labels.map(l => getAvg(db.home_m, l)), borderColor: '#4ade80', backgroundColor: '#4ade80', tension: 0.3, spanGaps: true, order: 2 },
-                        { label: 'เย็น', data: labels.map(l => getAvg(db.home_e, l)), borderColor: '#facc15', backgroundColor: '#facc15', tension: 0.3, spanGaps: true, order: 3 }
+                        { label: 'เป้าหมาย', data: Array(labels.length).fill(135), borderColor: '#00ffff', borderDash: [5, 5], pointRadius: 0, fill: false, order: 0 },
+                        { label: 'รพ.', data: labels.map(l => getV(db.hospital, l)), borderColor: '#ef4444', backgroundColor: '#ef4444', pointStyle: 'rectRot', radius: 6, spanGaps: true, order: 1 },
+                        { label: 'เช้า', data: labels.map(l => getV(db.home_m, l)), borderColor: '#4ade80', backgroundColor: '#4ade80', tension: 0.3, spanGaps: true, order: 2 },
+                        { label: 'เย็น', data: labels.map(l => getV(db.home_e, l)), borderColor: '#facc15', backgroundColor: '#facc15', tension: 0.3, spanGaps: true, order: 3 }
                     ]
                 },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { min: 90, max: 200, ticks: { size: 9, color: '#94a3b8' } } } }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { min: 90, max: 190, ticks: { size: 9, color: '#94a3b8' } } } }
             });
         }
 
         function toggleHistory() {
-            const list = document.getElementById('historyList');
-            list.classList.toggle('hidden');
-            if(!list.classList.contains('hidden')) renderHistory();
+            const l = document.getElementById('historyList');
+            l.classList.toggle('hidden');
+            if(!l.classList.contains('hidden')) {
+                const all = [...db.hospital.map(x=>({...x, t:'h', lbl:'รพ.'})), ...db.home_m.map(x=>({...x, t:'m', lbl:'เช้า'})), ...db.home_e.map(x=>({...x, t:'e', lbl:'เย็น'}))].sort((a,b)=>b.id-a.id);
+                l.innerHTML = all.map(i => `<div class="flex justify-between items-center border-b border-slate-800 py-2"><span>[${i.lbl}] ${i.date}</span><div class="flex gap-3"><b>${i.s}/${i.d}</b><button onclick="delH('${i.t}', ${i.id})" class="text-red-500"><i class="fa-solid fa-trash-can"></i></button></div></div>`).join('');
+            }
         }
 
-        function renderHistory() {
-            const list = document.getElementById('historyList');
-            const all = [...db.hospital.map(x=>({...x, t:'hospital', lbl:'รพ.'})), ...db.home_m.map(x=>({...x, t:'home_m', lbl:'เช้า'})), ...db.home_e.map(x=>({...x, t:'home_e', lbl:'เย็น'}))].sort((a,b)=>b.id-a.id);
-            list.innerHTML = all.map(i => `<div class="flex justify-between items-center border-b border-slate-800 py-2"><span>[${i.lbl}] ${i.date}</span><div class="flex gap-3"><b>${i.s}/${i.d}</b><button onclick="deleteItem('${i.t}', ${i.id})" class="text-red-500"><i class="fa-solid fa-trash-can"></i></button></div></div>`).join('');
+        function delH(t, id) {
+            if(confirm("ลบประวัตินี้?")) {
+                const key = t==='h'?'hospital':(t==='m'?'home_m':'home_e');
+                db[key] = db[key].filter(i => i.id !== id);
+                localStorage.setItem('ht_smart_v11', JSON.stringify(db));
+                updateUI(); toggleHistory(); toggleHistory();
+            }
         }
     </script>
 </body>
