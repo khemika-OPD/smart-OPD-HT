@@ -1,191 +1,79 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HT Smart Control Chart - OPD Takhli</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap');
-        body { font-family: 'Kanit', sans-serif; background-color: #0f172a; color: #f8fafc; }
-        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
-    </style>
-</head>
-<body class="p-4" onload="initApp()">
+function updateChart() {
+    const ctx = document.getElementById('bpChart').getContext('2d');
+    if(myChart) myChart.destroy();
 
-    <div class="max-w-md mx-auto space-y-4 pb-20">
-        
-        <!-- Header -->
-        <div class="glass-card rounded-3xl p-5 border-t-4 border-teal-500">
-            <div class="flex justify-between items-start">
-                <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 bg-slate-700 rounded-xl overflow-hidden border border-teal-500/50">
-                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Khemika" alt="avatar">
-                    </div>
-                    <div>
-                        <h2 class="text-md font-bold italic text-teal-400 uppercase">HT SMART Control</h2>
-                        <p class="text-[10px]">เป้าหมายความดัน: < 135/85 mmHg</p>
-                    </div>
-                </div>
-                <div class="text-right text-[9px] text-slate-400">
-                    <p>พว. เขมิกา พงษ์ศรี</p>
-                    <p>HN: 12345/69</p>
-                </div>
-            </div>
-        </div>
+    // ดึงข้อมูลวันที่ล่าสุด 7 วัน (ถ้าไม่มีให้สร้างแกนวันปัจจุบันรอไว้)
+    let labels = [...new Set([...db.hospital, ...db.home_m, ...db.home_e].map(x => x.date))].slice(-7);
+    if (labels.length === 0) labels = [new Date().toLocaleDateString('th-TH')];
 
-        <!-- Section: Control Chart (แสดงค่าเฉลี่ยรายวัน) -->
-        <div class="glass-card rounded-3xl p-4">
-            <button onclick="toggleGraph()" class="w-full flex justify-between items-center text-teal-300 font-semibold text-xs mb-2">
-                <span><i class="fa-solid fa-chart-area mr-2"></i> สถิติแนวโน้ม (เฉลี่ยรายวัน)</span>
-                <i id="graphIcon" class="fa-solid fa-chevron-down"></i>
-            </button>
-            
-            <div id="graphSection" class="hidden space-y-3">
-                <div class="h-56 w-full"><canvas id="bpChart"></canvas></div>
-                <!-- Legend -->
-                <div class="grid grid-cols-2 gap-2 text-[8px] border-t border-slate-800 pt-2">
-                    <span class="flex items-center gap-1"><i class="fa-solid fa-circle text-red-500"></i> รพ. (OBP)</span>
-                    <span class="flex items-center gap-1"><i class="fa-solid fa-circle text-green-400"></i> เฉลี่ยบ้าน-เช้า</span>
-                    <span class="flex items-center gap-1"><i class="fa-solid fa-circle text-yellow-400"></i> เฉลี่ยบ้าน-เย็น</span>
-                    <span class="flex items-center gap-1 font-bold text-white italic">--- เป้าหมาย (135 mmHg)</span>
-                </div>
-            </div>
-        </div>
+    const getDailyAvg = (dataArr, labelDate) => {
+        const dayData = dataArr.filter(x => x.date === labelDate);
+        return dayData.length ? dayData.reduce((a,b)=>a+b.s,0)/dayData.length : null;
+    };
 
-        <!-- Input & Average Display -->
-        <div class="space-y-3">
-            <!-- Home Record & Average Display -->
-            <div class="glass-card rounded-3xl p-4 border-l-4 border-teal-500">
-                <p class="text-[10px] font-bold text-teal-400 mb-2 uppercase italic">Home Recording (2-2-7)</p>
-                
-                <!-- แถบค่าเฉลี่ย 7 วันล่าสุด (นำกลับมาแล้วค่ะ) -->
-                <div class="grid grid-cols-2 gap-2 mb-4">
-                    <div class="bg-slate-800/80 p-2 rounded-xl text-center border border-teal-500/20">
-                        <p class="text-[8px] text-slate-400 uppercase">เฉลี่ยเช้า (7 วัน)</p>
-                        <p id="avgM" class="text-sm font-bold text-teal-400">--/--</p>
-                    </div>
-                    <div class="bg-slate-800/80 p-2 rounded-xl text-center border border-yellow-500/20">
-                        <p class="text-[8px] text-slate-400 uppercase">เฉลี่ยเย็น (7 วัน)</p>
-                        <p id="avgE" class="text-sm font-bold text-yellow-400">--/--</p>
-                    </div>
-                </div>
-
-                <div class="flex gap-2 p-1 bg-slate-800 rounded-xl mb-2">
-                    <button onclick="setPeriod('morning')" id="btnM" class="w-1/2 py-1 bg-teal-600 rounded-lg text-[9px]">ช่วงเช้า</button>
-                    <button onclick="setPeriod('evening')" id="btnE" class="w-1/2 py-1 text-slate-500 rounded-lg text-[9px]">ช่วงเย็น</button>
-                </div>
-                <div class="flex gap-2">
-                    <input type="number" id="sysIn" placeholder="SYS" class="w-1/2 bg-slate-800 border border-slate-700 rounded-xl p-2 text-center text-sm outline-none">
-                    <input type="number" id="diaIn" placeholder="DIA" class="w-1/2 bg-slate-800 border border-slate-700 rounded-xl p-2 text-center text-sm outline-none">
-                </div>
-                <button onclick="addRec('home')" class="w-full mt-2 bg-teal-600 p-2 rounded-xl text-[10px] font-bold shadow-lg">บันทึกค่าบ้าน</button>
-            </div>
-
-            <!-- Hospital Record -->
-            <div class="glass-card rounded-3xl p-4 border-l-4 border-red-500">
-                <p class="text-[10px] font-bold text-red-400 mb-2 uppercase italic">Hospital (คัดกรองที่ รพ.)</p>
-                <div class="flex gap-2">
-                    <input type="number" id="hSys" placeholder="SYS" class="w-1/2 bg-slate-800 border border-slate-700 rounded-xl p-2 text-center text-sm outline-none">
-                    <input type="number" id="hDia" placeholder="DIA" class="w-1/2 bg-slate-800 border border-slate-700 rounded-xl p-2 text-center text-sm outline-none">
-                </div>
-                <button onclick="addRec('hospital')" class="w-full mt-2 bg-red-600/80 p-2 rounded-xl text-[10px] font-bold">บันทึกค่า รพ.</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        let db = { hospital: [], home_m: [], home_e: [] };
-        let currentP = 'morning';
-        let myChart;
-
-        function initApp() {
-            const saved = localStorage.getItem('ht_smart_v6');
-            if(saved) db = JSON.parse(saved);
-            updateAverages();
-        }
-
-        function toggleGraph() {
-            const sec = document.getElementById('graphSection');
-            const icon = document.getElementById('graphIcon');
-            sec.classList.toggle('hidden');
-            icon.classList.toggle('fa-chevron-up');
-            if(!sec.classList.contains('hidden')) updateChart();
-        }
-
-        function setPeriod(p) {
-            currentP = p;
-            document.getElementById('btnM').className = p === 'morning' ? "w-1/2 py-1 bg-teal-600 rounded-lg text-[9px]" : "w-1/2 py-1 text-slate-500 rounded-lg text-[9px]";
-            document.getElementById('btnE').className = p === 'evening' ? "w-1/2 py-1 bg-orange-600 text-white rounded-lg text-[9px]" : "w-1/2 py-1 text-slate-500 rounded-lg text-[9px]";
-        }
-
-        function addRec(type) {
-            const sys = (type==='hospital') ? document.getElementById('hSys').value : document.getElementById('sysIn').value;
-            const dia = (type==='hospital') ? document.getElementById('hDia').value : document.getElementById('diaIn').value;
-            
-            if(sys && dia) {
-                const entry = { s: parseInt(sys), d: parseInt(dia), date: new Date().toLocaleDateString('th-TH') };
-                if(type==='hospital') db.hospital.push(entry);
-                else if(currentP==='morning') db.home_m.push(entry);
-                else db.home_e.push(entry);
-                
-                localStorage.setItem('ht_smart_v6', JSON.stringify(db));
-                updateAverages();
-                alert("บันทึกสำเร็จ!");
-                if(!document.getElementById('graphSection').classList.contains('hidden')) updateChart();
-                document.getElementById('hSys').value = ''; document.getElementById('hDia').value = '';
-                document.getElementById('sysIn').value = ''; document.getElementById('diaIn').value = '';
+    myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                { 
+                    label: 'รพ.', 
+                    data: labels.map(l => getDailyAvg(db.hospital, l)), 
+                    borderColor: '#ef4444', 
+                    backgroundColor: '#ef4444', 
+                    pointStyle: 'rectRot', 
+                    radius: 6,
+                    spanGaps: true // เชื่อมเส้นแม้ข้อมูลขาดช่วง
+                },
+                { 
+                    label: 'เฉลี่ยบ้าน-เช้า', 
+                    data: labels.map(l => getDailyAvg(db.home_m, l)), 
+                    borderColor: '#4ade80', // สีเขียวสว่าง
+                    backgroundColor: '#4ade80', 
+                    tension: 0.3,
+                    pointRadius: 4,
+                    spanGaps: true 
+                },
+                { 
+                    label: 'เฉลี่ยบ้าน-เย็น', 
+                    data: labels.map(l => getDailyAvg(db.home_e, l)), 
+                    borderColor: '#facc15', // สีเหลือง
+                    backgroundColor: '#facc15', 
+                    tension: 0.3,
+                    pointRadius: 4,
+                    spanGaps: true 
+                },
+                { 
+                    label: 'เป้าหมาย', 
+                    data: Array(labels.length).fill(135), 
+                    borderColor: '#ffffff', // บังคับเป็นสีขาว
+                    borderWidth: 2,
+                    borderDash: [5, 5], 
+                    pointRadius: 0, 
+                    fill: false,
+                    z: -1 // ให้เส้นเป้าหมายอยู่ด้านหลังจุดข้อมูล
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            layout: { padding: { top: 10 } },
+            scales: {
+                y: { 
+                    min: 90, 
+                    max: 200, 
+                    ticks: { stepSize: 10, color: '#94a3b8', font: { size: 9 } },
+                    grid: { color: 'rgba(255,255,255,0.05)' }
+                },
+                x: { 
+                    ticks: { color: '#94a3b8', font: { size: 8 } },
+                    grid: { display: false }
+                }
+            },
+            plugins: { 
+                legend: { display: false } // เราใช้ Legend ที่สร้างเองด้านล่างกราฟแทน
             }
         }
-
-        function updateAverages() {
-            const calc = (arr) => {
-                const last7 = arr.slice(-7);
-                if(!last7.length) return "--/--";
-                return Math.round(last7.reduce((a,b)=>a+b.s,0)/last7.length) + "/" + Math.round(last7.reduce((a,b)=>a+b.d,0)/last7.length);
-            };
-            document.getElementById('avgM').innerText = calc(db.home_m);
-            document.getElementById('avgE').innerText = calc(db.home_e);
-        }
-
-        function updateChart() {
-            const ctx = document.getElementById('bpChart').getContext('2d');
-            if(myChart) myChart.destroy();
-
-            // ดึงข้อมูลวันที่ไม่ซ้ำกัน 7 วันล่าสุด
-            const labels = [...new Set([...db.hospital, ...db.home_m, ...db.home_e].map(x => x.date))].slice(-7);
-
-            // ฟังก์ชันหาค่าเฉลี่ยรายวันสำหรับกราฟ
-            const getDailyAvg = (dataArr, labelDate) => {
-                const dayData = dataArr.filter(x => x.date === labelDate);
-                if(!dayData.length) return null;
-                return dayData.reduce((a,b)=>a+b.s,0)/dayData.length;
-            };
-
-            myChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels.length ? labels : ['รอนำเข้าข้อมูล'],
-                    datasets: [
-                        { label: 'รพ.', data: labels.map(l => getDailyAvg(db.hospital, l)), borderColor: '#ef4444', backgroundColor: '#ef4444', pointStyle: 'rectRot', radius: 5 },
-                        { label: 'เช้า (เฉลี่ยวัน)', data: labels.map(l => getDailyAvg(db.home_m, l)), borderColor: '#4ade80', backgroundColor: '#4ade80', tension: 0.3 },
-                        { label: 'เย็น (เฉลี่ยวัน)', data: labels.map(l => getDailyAvg(db.home_e, l)), borderColor: '#facc15', backgroundColor: '#facc15', tension: 0.3 },
-                        { label: 'เป้าหมาย', data: Array(labels.length || 1).fill(135), borderColor: 'rgba(255,255,255,0.7)', borderDash: [5, 5], pointRadius: 0, fill: false }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: { min: 90, max: 190, ticks: { size: 8, color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-                        x: { ticks: { size: 7, color: '#94a3b8' } }
-                    },
-                    plugins: { legend: { display: false } }
-                }
-            });
-        }
-    </script>
-</body>
-</html>
+    });
+}
