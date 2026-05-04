@@ -10,11 +10,14 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap');
-        body { font-family: 'Kanit', sans-serif; background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%); color: #f8fafc; min-height: 100vh; }
+        body { font-family: 'Kanit', sans-serif; background: #0f172a; color: #f8fafc; min-height: 100vh; }
         .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
-        .input-dark { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(45, 212, 191, 0.3); border-radius: 0.75rem; padding: 0.6rem; width: 100%; color: white; outline: none; }
-        .input-dark:focus { border-color: #2dd4bf; box-shadow: 0 0 10px rgba(45, 212, 191, 0.2); }
-        .badge-red { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+        
+        /* ตกแต่งสีสันช่องโรคประจำตัวและแพ้ยา */
+        .input-comorbidity { background: rgba(20, 184, 166, 0.1); border: 1px solid rgba(20, 184, 166, 0.4); border-radius: 0.75rem; padding: 0.75rem; width: 100%; color: #5eead4; outline: none; }
+        .input-allergy { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 0.75rem; padding: 0.75rem; width: 100%; color: #fca5a5; outline: none; }
+        
+        .input-dark { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 0.75rem; padding: 0.75rem; width: 100%; color: white; outline: none; }
         .btn-gradient { background: linear-gradient(90deg, #0d9488 0%, #2dd4bf 100%); transition: 0.3s; }
         .btn-gradient:active { transform: scale(0.95); }
     </style>
@@ -23,59 +26,56 @@
 
     <div class="max-w-md mx-auto space-y-4">
         
-        <!-- Header: ข้อมูล HN และ ชื่อ-นามสกุล -->
+        <!-- Header: Profile -->
         <div class="glass-card rounded-[2rem] p-6 border-t-4 border-teal-400">
-            <div class="flex items-center gap-4 mb-4">
+            <div class="flex items-center gap-4 mb-5">
                 <div class="w-14 h-14 bg-teal-500/20 rounded-2xl flex items-center justify-center border border-teal-400/30">
                     <i class="fa-solid fa-hospital-user text-teal-400 text-2xl"></i>
                 </div>
                 <div>
-                    <h2 class="text-lg font-bold text-white tracking-wide">HN: 12345/69</h2>
+                    <h2 class="text-lg font-bold text-white tracking-wide italic">HN: 12345/69</h2>
                     <p class="text-sm text-teal-300 font-medium">คุณเขมิกา พงษ์ศรี</p>
                 </div>
             </div>
             
-            <div class="space-y-3">
-                <div class="flex flex-col gap-1">
-                    <label class="text-[10px] text-slate-400 ml-2 font-bold uppercase">โรคประจำตัว</label>
-                    <input type="text" id="comorbidity" placeholder="เช่น DM, DLP..." class="input-dark text-sm" onchange="saveInfo()">
+            <div class="space-y-4">
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-[10px] text-teal-400 ml-2 font-bold uppercase tracking-wider">โรคประจำตัว (Comorbidity)</label>
+                    <input type="text" id="comorbidity" placeholder="ระบุโรคประจำตัว..." class="input-comorbidity text-sm" onchange="saveInfo()">
                 </div>
-                <div class="flex flex-col gap-1">
-                    <label class="text-[10px] text-red-400 ml-2 font-bold uppercase italic">ประวัติแพ้ยา *</label>
-                    <input type="text" id="allergyInput" placeholder="ระบุชื่อยาที่แพ้..." class="input-dark border-red-500/20 text-red-200 text-sm" onchange="saveInfo()">
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-[10px] text-red-400 ml-2 font-bold uppercase tracking-wider italic underline">ประวัติแพ้ยา (Drug Allergy) *</label>
+                    <input type="text" id="allergyInput" placeholder="ระบุชื่อยาที่แพ้..." class="input-allergy text-sm font-bold" onchange="saveInfo()">
                 </div>
             </div>
         </div>
 
-        <!-- Medication Section -->
+        <!-- Medication Section (พร้อมปุ่มเปิด/ปิดรายการยา) -->
         <div class="glass-card rounded-[2rem] p-6 border-l-4 border-teal-500 space-y-4">
             <div class="flex justify-between items-center">
-                <h3 class="text-sm font-bold text-teal-300 italic uppercase flex items-center gap-2">
-                    <i class="fa-solid fa-pills"></i> รายการยาปัจจุบัน
+                <h3 class="text-xs font-bold text-teal-300 uppercase flex items-center gap-2">
+                    <i class="fa-solid fa-pills"></i> จัดการรายการยา
                 </h3>
                 <div class="flex gap-2">
-                    <button onclick="toggleMedList()" class="text-slate-400 hover:text-white transition-colors"><i id="medIcon" class="fa-solid fa-eye-slash"></i></button>
-                    <button onclick="addMedManual()" class="bg-teal-500/10 text-teal-400 px-3 py-1 rounded-xl text-[10px] border border-teal-500/30 font-bold hover:bg-teal-500/20">+ เพิ่มยา</button>
-                    <button onclick="document.getElementById('cameraInput').click()" class="btn-gradient text-white px-3 py-1 rounded-xl text-[10px] font-bold shadow-lg"><i class="fa-solid fa-camera mr-1"></i> สแกน</button>
+                    <button onclick="toggleMedList()" class="bg-slate-800 p-2 rounded-lg text-slate-400"><i id="medIcon" class="fa-solid fa-eye-slash"></i></button>
+                    <button onclick="addMedManual()" class="bg-teal-500/10 text-teal-400 px-3 py-1 rounded-xl text-[10px] border border-teal-500/30">+ เพิ่มยา</button>
+                    <button onclick="document.getElementById('cameraInput').click()" class="btn-gradient text-white px-3 py-1 rounded-xl text-[10px] font-bold"><i class="fa-solid fa-camera mr-1"></i> สแกน</button>
                     <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden" onchange="processImage(this)">
                 </div>
             </div>
 
-            <div id="ocrStatus" class="hidden text-center py-4 bg-slate-800/50 rounded-2xl border border-teal-500/20 animate-pulse">
-                <p id="loader" class="text-xs text-teal-400 italic">กำลังอ่านข้อมูลจากซองยา...</p>
+            <div id="ocrStatus" class="hidden text-center py-4 bg-slate-800/50 rounded-2xl border border-teal-500/20">
+                <div id="loader" class="text-xs text-teal-400 animate-pulse">กำลังวิเคราะห์ข้อมูล...</div>
                 <div id="confirmZone" class="hidden space-y-3 p-3">
-                    <p class="text-[10px] text-slate-400 italic">ตรวจสอบชื่อยาที่อ่านได้:</p>
                     <input type="text" id="tempMedName" class="input-dark text-center font-bold text-teal-300">
-                    <button onclick="confirmMed()" class="w-full btn-gradient py-2 rounded-xl text-xs font-bold">ยืนยันรายการนี้</button>
+                    <button onclick="confirmMed()" class="w-full btn-gradient py-2 rounded-xl text-xs font-bold">ยืนยันรายการยา</button>
                 </div>
             </div>
 
-            <div id="medListArea" class="space-y-3">
-                <!-- รายการยาจะแสดงที่นี่ -->
-            </div>
+            <div id="medListArea" class="space-y-3"></div>
         </div>
 
-        <!-- Trend Chart Section -->
+        <!-- Trend Chart (พร้อมปุ่มเปิด/ปิดกราฟ) -->
         <div class="glass-card rounded-[2rem] p-5">
             <button onclick="toggleGraph()" class="w-full flex justify-between items-center text-teal-300 font-bold text-xs uppercase tracking-widest">
                 <span><i class="fa-solid fa-chart-line mr-2"></i> สถิติแนวโน้ม (Trend Chart)</span>
@@ -84,38 +84,45 @@
             <div id="graphSection" class="hidden mt-6 space-y-4">
                 <div class="h-48 w-full"><canvas id="bpChart"></canvas></div>
                 <div class="grid grid-cols-2 gap-2 text-[9px] border-t border-slate-700/50 pt-3">
-                    <span class="flex items-center gap-2"><i class="fa-solid fa-circle text-red-500"></i> BP รพ. (OBP)</span>
-                    <span class="flex items-center gap-2"><i class="fa-solid fa-circle text-[#4ade80]"></i> BP บ้าน (เช้า)</span>
-                    <span class="flex items-center gap-2"><i class="fa-solid fa-circle text-[#facc15]"></i> BP บ้าน (เย็น)</span>
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-circle text-red-500"></i> BP รพ.</span>
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-circle text-[#4ade80]"></i> BP เช้า</span>
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-circle text-[#facc15]"></i> BP เย็น</span>
                     <span class="flex items-center gap-2 font-bold text-cyan-400">--- เป้าหมาย (135)</span>
                 </div>
             </div>
         </div>
 
-        <!-- BP Recording Section (2-2-7) -->
+        <!-- BP Recording Section (พร้อมปุ่มเปิด/ปิดผลความดัน) -->
         <div class="glass-card rounded-[2rem] p-6 border-l-4 border-teal-500 space-y-5">
-            <div class="grid grid-cols-2 gap-3">
-                <div class="bg-slate-800/80 p-3 rounded-2xl text-center border border-teal-500/10">
-                    <p class="text-[9px] text-slate-400 uppercase font-bold">เฉลี่ยเช้า (7 วัน)</p>
-                    <p id="avgM" class="text-lg font-bold text-teal-400">--/--</p>
-                </div>
-                <div class="bg-slate-800/80 p-3 rounded-2xl text-center border border-yellow-500/10">
-                    <p class="text-[9px] text-slate-400 uppercase font-bold">เฉลี่ยเย็น (7 วัน)</p>
-                    <p id="avgE" class="text-lg font-bold text-yellow-400">--/--</p>
-                </div>
-            </div>
+            <button onclick="toggleBPRecording()" class="w-full flex justify-between items-center text-teal-300 font-bold text-xs uppercase tracking-widest">
+                <span><i class="fa-solid fa-heart-pulse mr-2"></i> บันทึก & ผลความดันเฉลี่ย</span>
+                <i id="bpIcon" class="fa-solid fa-chevron-down transition-transform duration-300"></i>
+            </button>
             
-            <div class="flex gap-2 p-1 bg-slate-900/80 rounded-2xl">
-                <button onclick="setPeriod('morning')" id="btnM" class="flex-1 py-2 rounded-xl bg-teal-600 text-white text-xs font-bold transition-all shadow-md">เช้า</button>
-                <button onclick="setPeriod('evening')" id="btnE" class="flex-1 py-2 rounded-xl text-slate-400 text-xs font-bold transition-all">เย็น</button>
-                <button onclick="setPeriod('hospital')" id="btnH" class="flex-1 py-2 rounded-xl text-slate-400 text-xs font-bold transition-all">รพ.</button>
-            </div>
+            <div id="bpRecordingSection" class="hidden space-y-5 pt-2">
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-slate-800/80 p-3 rounded-2xl text-center border border-teal-500/10">
+                        <p class="text-[9px] text-slate-400 uppercase font-bold">เฉลี่ยเช้า (7 วัน)</p>
+                        <p id="avgM" class="text-lg font-bold text-teal-400">--/--</p>
+                    </div>
+                    <div class="bg-slate-800/80 p-3 rounded-2xl text-center border border-yellow-500/10">
+                        <p class="text-[9px] text-slate-400 uppercase font-bold">เฉลี่ยเย็น (7 วัน)</p>
+                        <p id="avgE" class="text-lg font-bold text-yellow-400">--/--</p>
+                    </div>
+                </div>
+                
+                <div class="flex gap-2 p-1 bg-slate-900/80 rounded-2xl">
+                    <button onclick="setPeriod('morning')" id="btnM" class="flex-1 py-2 rounded-xl bg-teal-600 text-white text-xs font-bold transition-all">เช้า</button>
+                    <button onclick="setPeriod('evening')" id="btnE" class="flex-1 py-2 rounded-xl text-slate-400 text-xs font-bold transition-all">เย็น</button>
+                    <button onclick="setPeriod('hospital')" id="btnH" class="flex-1 py-2 rounded-xl text-slate-400 text-xs font-bold transition-all">รพ.</button>
+                </div>
 
-            <div class="flex gap-3">
-                <input type="number" id="sysIn" placeholder="SYS" class="w-1/2 bg-slate-950 border border-slate-700 rounded-2xl p-4 text-center text-2xl font-bold text-white outline-none focus:border-teal-400 shadow-inner">
-                <input type="number" id="diaIn" placeholder="DIA" class="w-1/2 bg-slate-950 border border-slate-700 rounded-2xl p-4 text-center text-2xl font-bold text-white outline-none focus:border-teal-400 shadow-inner">
+                <div class="flex gap-3">
+                    <input type="number" id="sysIn" placeholder="SYS" class="w-1/2 bg-slate-950 border border-slate-700 rounded-2xl p-4 text-center text-2xl font-bold text-white outline-none">
+                    <input type="number" id="diaIn" placeholder="DIA" class="w-1/2 bg-slate-950 border border-slate-700 rounded-2xl p-4 text-center text-2xl font-bold text-white outline-none">
+                </div>
+                <button onclick="addRecord()" class="w-full btn-gradient p-4 rounded-2xl text-sm font-bold shadow-xl uppercase">บันทึกข้อมูลความดัน</button>
             </div>
-            <button onclick="addRecord()" class="w-full btn-gradient p-4 rounded-2xl text-sm font-bold shadow-xl tracking-widest uppercase">บันทึกข้อมูลความดัน</button>
         </div>
 
     </div>
@@ -126,7 +133,7 @@
         let myChart;
 
         function initApp() {
-            const saved = localStorage.getItem('HT_V16_TAKHLI');
+            const saved = localStorage.getItem('HT_V17_TAKHLI');
             if(saved) db = JSON.parse(saved);
             document.getElementById('comorbidity').value = db.info.com || "";
             document.getElementById('allergyInput').value = db.info.alr || "";
@@ -134,87 +141,12 @@
             updateUI();
         }
 
-        // Medication Logic
-        async function processImage(input) {
-            if (!input.files || !input.files[0]) return;
-            document.getElementById('ocrStatus').classList.remove('hidden');
-            document.getElementById('loader').classList.remove('hidden');
-            document.getElementById('confirmZone').classList.add('hidden');
-            try {
-                const result = await Tesseract.recognize(input.files[0], 'eng+tha');
-                const text = result.data.text.split('\n').filter(l => l.trim().length > 3);
-                document.getElementById('tempMedName').value = text[0] || "ไม่ทราบชื่อยา";
-                document.getElementById('loader').classList.add('hidden');
-                document.getElementById('confirmZone').classList.remove('hidden');
-            } catch (e) { alert("ระบบขัดข้อง กรุณาลองใหม่ค่ะ"); document.getElementById('ocrStatus').classList.add('hidden'); }
-        }
-
-        function addMedManual() {
-            const name = prompt("ระบุชื่อยาและขนาด (เช่น Amlodipine 5mg):");
-            if(name) { db.info.meds.push({ id: Date.now(), n: name, r: "0" }); saveAndRef(); }
-        }
-
-        function confirmMed() {
-            const n = document.getElementById('tempMedName').value;
-            if(n) db.info.meds.push({ id: Date.now(), n: n, r: "0" });
-            document.getElementById('ocrStatus').classList.add('hidden');
-            saveAndRef();
-        }
-
-        function saveAndRef() { localStorage.setItem('HT_V16_TAKHLI', JSON.stringify(db)); renderMeds(); }
-
-        function renderMeds() {
-            const list = document.getElementById('medListArea');
-            list.innerHTML = db.info.meds.map((m, i) => `
-                <div class="bg-slate-900/40 p-4 rounded-2xl border border-teal-500/10 flex justify-between items-center shadow-inner">
-                    <div class="flex-1">
-                        <p class="text-xs text-teal-300 font-bold">${i+1}. ${m.n}</p>
-                        <div class="flex items-center gap-3 mt-2 bg-slate-950/50 p-2 rounded-xl w-fit border border-teal-500/5">
-                            <span class="text-[9px] text-slate-500 font-bold uppercase tracking-tight">ยาคงเหลือ:</span>
-                            <input type="number" value="${m.r}" onchange="updateRem(${m.id}, this.value)" class="w-14 bg-slate-900 border border-slate-700 rounded-lg text-center text-xs text-orange-400 font-bold outline-none">
-                            <span class="text-[9px] text-slate-500 font-medium">เม็ด</span>
-                        </div>
-                    </div>
-                    <button onclick="delMed(${m.id})" class="text-red-400 hover:text-red-300 transition-colors p-2"><i class="fa-solid fa-trash-can"></i></button>
-                </div>
-            `).join('');
-        }
-
-        function updateRem(id, val) { const m = db.info.meds.find(x => x.id === id); if(m) { m.r = val; saveAndRef(); } }
-        function delMed(id) { if(confirm("ต้องการลบรายการยานี้หรือไม่?")) { db.info.meds = db.info.meds.filter(x => x.id !== id); saveAndRef(); } }
-        function toggleMedList() { 
-            const list = document.getElementById('medListArea');
+        // Logic เปิด/ซ่อนต่างๆ
+        function toggleMedList() {
+            const area = document.getElementById('medListArea');
             const icon = document.getElementById('medIcon');
-            const isHidden = list.classList.toggle('hidden');
+            const isHidden = area.classList.toggle('hidden');
             icon.className = isHidden ? "fa-solid fa-eye" : "fa-solid fa-eye-slash";
-        }
-
-        // BP Logic
-        function setPeriod(p) {
-            currentP = p;
-            document.querySelectorAll('#btnM, #btnE, #btnH').forEach(b => b.className = "flex-1 py-2 rounded-xl text-slate-400 text-xs font-bold transition-all");
-            const activeId = p === 'morning' ? 'btnM' : (p === 'evening' ? 'btnE' : 'btnH');
-            const color = p === 'hospital' ? 'bg-red-600' : 'bg-teal-600';
-            document.getElementById(activeId).className = `flex-1 py-2 rounded-xl ${color} text-white text-xs font-bold transition-all shadow-md`;
-        }
-
-        function addRecord() {
-            const s = document.getElementById('sysIn').value, d = document.getElementById('diaIn').value;
-            if(s && d) {
-                const entry = { id: Date.now(), s: parseInt(s), d: parseInt(diaIn.value), date: new Date().toLocaleDateString('th-TH') };
-                if(currentP === 'morning') db.home_m.push(entry);
-                else if(currentP === 'evening') db.home_e.push(entry);
-                else db.hospital.push(entry);
-                localStorage.setItem('HT_V16_TAKHLI', JSON.stringify(db));
-                updateUI(); document.getElementById('sysIn').value = ''; document.getElementById('diaIn').value = '';
-                alert("บันทึกข้อมูลเรียบร้อยแล้วค่ะ");
-            } else alert("กรุณากรอกข้อมูลให้ครบถ้วนค่ะ");
-        }
-
-        function saveInfo() {
-            db.info.com = document.getElementById('comorbidity').value;
-            db.info.alr = document.getElementById('allergyInput').value;
-            localStorage.setItem('HT_V16_TAKHLI', JSON.stringify(db));
         }
 
         function toggleGraph() {
@@ -225,14 +157,96 @@
             if(!isHidden) setTimeout(renderChart, 100);
         }
 
+        function toggleBPRecording() {
+            const sec = document.getElementById('bpRecordingSection');
+            const icon = document.getElementById('bpIcon');
+            const isHidden = sec.classList.toggle('hidden');
+            icon.style.transform = isHidden ? "rotate(0deg)" : "rotate(180deg)";
+        }
+
+        // Medication
+        async function processImage(input) {
+            if (!input.files || !input.files[0]) return;
+            document.getElementById('ocrStatus').classList.remove('hidden');
+            document.getElementById('loader').classList.remove('hidden');
+            document.getElementById('confirmZone').classList.add('hidden');
+            try {
+                const result = await Tesseract.recognize(input.files[0], 'eng+tha');
+                document.getElementById('tempMedName').value = result.data.text.split('\n')[0] || "ไม่ระบุชื่อยา";
+                document.getElementById('loader').classList.add('hidden');
+                document.getElementById('confirmZone').classList.remove('hidden');
+            } catch (e) { alert("สแกนขัดข้อง กรุณาลองใหม่ค่ะ"); }
+        }
+
+        function addMedManual() {
+            const n = prompt("ระบุชื่อยาและขนาด:");
+            if(n) { db.info.meds.push({ id: Date.now(), n: n, r: "0" }); saveMed(); }
+        }
+
+        function confirmMed() {
+            db.info.meds.push({ id: Date.now(), n: document.getElementById('tempMedName').value, r: "0" });
+            document.getElementById('ocrStatus').classList.add('hidden');
+            saveMed();
+        }
+
+        function saveMed() { localStorage.setItem('HT_V17_TAKHLI', JSON.stringify(db)); renderMeds(); }
+
+        function renderMeds() {
+            const list = document.getElementById('medListArea');
+            list.innerHTML = db.info.meds.map((m, i) => `
+                <div class="bg-slate-900/40 p-4 rounded-2xl border border-teal-500/10 flex justify-between items-center">
+                    <div class="flex-1">
+                        <p class="text-xs text-teal-300 font-bold">${i+1}. ${m.n}</p>
+                        <div class="flex items-center gap-2 mt-2">
+                            <span class="text-[9px] text-slate-500">คงเหลือ:</span>
+                            <input type="number" value="${m.r}" onchange="updateRem(${m.id}, this.value)" class="w-14 bg-slate-900 border border-slate-700 rounded text-center text-xs text-orange-400 font-bold outline-none">
+                            <span class="text-[9px] text-slate-500">เม็ด</span>
+                        </div>
+                    </div>
+                    <button onclick="delMed(${m.id})" class="text-red-400 p-2"><i class="fa-solid fa-trash-can"></i></button>
+                </div>
+            `).join('');
+        }
+
+        function updateRem(id, val) { const m = db.info.meds.find(x => x.id === id); if(m) { m.r = val; saveMed(); } }
+        function delMed(id) { if(confirm("ลบรายการนี้?")) { db.info.meds = db.info.meds.filter(x => x.id !== id); saveMed(); } }
+
+        // BP Control
+        function setPeriod(p) {
+            currentP = p;
+            document.querySelectorAll('#btnM, #btnE, #btnH').forEach(b => b.className = "flex-1 py-2 rounded-xl text-slate-400 text-xs font-bold transition-all");
+            const activeId = p === 'morning' ? 'btnM' : (p === 'evening' ? 'btnE' : 'btnH');
+            const color = p === 'hospital' ? 'bg-red-600' : 'bg-teal-600';
+            document.getElementById(activeId).className = `flex-1 py-2 rounded-xl ${color} text-white text-xs font-bold shadow-md`;
+        }
+
+        function addRecord() {
+            const s = document.getElementById('sysIn').value, d = document.getElementById('diaIn').value;
+            if(s && d) {
+                const entry = { id: Date.now(), s: parseInt(s), d: parseInt(d), date: new Date().toLocaleDateString('th-TH') };
+                if(currentP === 'morning') db.home_m.push(entry);
+                else if(currentP === 'evening') db.home_e.push(entry);
+                else db.hospital.push(entry);
+                localStorage.setItem('HT_V17_TAKHLI', JSON.stringify(db));
+                updateUI(); document.getElementById('sysIn').value = ''; document.getElementById('diaIn').value = '';
+                alert("บันทึกเรียบร้อยค่ะ");
+            }
+        }
+
+        function saveInfo() {
+            db.info.com = document.getElementById('comorbidity').value;
+            db.info.alr = document.getElementById('allergyInput').value;
+            localStorage.setItem('HT_V17_TAKHLI', JSON.stringify(db));
+        }
+
         function updateUI() {
-            const calcAvg = (arr) => {
+            const calc = (arr) => {
                 const last7 = arr.slice(-7);
                 if(!last7.length) return "--/--";
                 return Math.round(last7.reduce((a,b)=>a+b.s,0)/last7.length) + "/" + Math.round(last7.reduce((a,b)=>a+b.d,0)/last7.length);
             };
-            document.getElementById('avgM').innerText = calcAvg(db.home_m);
-            document.getElementById('avgE').innerText = calcAvg(db.home_e);
+            document.getElementById('avgM').innerText = calc(db.home_m);
+            document.getElementById('avgE').innerText = calc(db.home_e);
             if(!document.getElementById('graphSection').classList.contains('hidden')) renderChart();
         }
 
