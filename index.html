@@ -6,92 +6,128 @@
     <title>HT Smart Control - OPD Takhli</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Library สำหรับอ่านข้อความจากภาพ (OCR) -->
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap');
-        body { font-family: 'Kanit', sans-serif; background-color: #0f172a; color: #f8fafc; }
-        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .input-dark { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 0.75rem; padding: 0.6rem; width: 100%; color: white; outline: none; }
-        .loading-spinner { border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid #2dd4bf; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; }
+        body { font-family: 'Kanit', sans-serif; background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%); color: #f8fafc; min-height: 100vh; }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+        .input-dark { background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(45, 212, 191, 0.2); border-radius: 1rem; padding: 0.75rem; width: 100%; color: white; outline: none; transition: 0.3s; }
+        .input-dark:focus { border-color: #2dd4bf; box-shadow: 0 0 10px rgba(45, 212, 191, 0.2); }
+        .btn-primary { background: linear-gradient(90deg, #0d9488 0%, #2dd4bf 100%); transition: 0.3s; }
+        .btn-primary:active { transform: scale(0.95); }
+        .loading-spinner { border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid #2dd4bf; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="p-4" onload="initApp()">
+<body class="p-4 pb-12" onload="initApp()">
 
-    <div class="max-w-md mx-auto space-y-4 pb-24">
+    <div class="max-w-md mx-auto space-y-5">
         
-        <!-- Header & Patient Info -->
-        <div class="glass-card rounded-3xl p-5 border-t-4 border-teal-500 space-y-3">
-            <div class="flex justify-between items-center">
+        <!-- ส่วนหัว: ข้อมูลผู้ป่วย -->
+        <div class="glass-card rounded-[2rem] p-6 border-t-4 border-teal-400">
+            <div class="flex justify-between items-center mb-5">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-teal-500/20 rounded-full flex items-center justify-center">
-                        <i class="fa-solid fa-pills text-teal-400"></i>
+                    <div class="w-12 h-12 bg-teal-500/20 rounded-2xl flex items-center justify-center border border-teal-500/30">
+                        <i class="fa-solid fa-hospital-user text-teal-400 text-xl"></i>
                     </div>
                     <div>
-                        <h2 class="text-sm font-bold text-teal-400 uppercase">HT SMART CONTROL</h2>
-                        <p class="text-[10px] text-slate-400">พว. เขมิกา พงษ์ศรี | OPD Takhli</p>
+                        <h1 class="text-lg font-bold text-white tracking-tight">HT SMART CONTROL</h1>
+                        <p class="text-[10px] text-teal-400 font-medium">OPD TAKHLI DIGITAL TOOLKIT</p>
                     </div>
                 </div>
             </div>
-            <div class="grid grid-cols-2 gap-2">
-                <input type="text" id="comorbidity" placeholder="โรคประจำตัว" class="input-dark text-[10px]" onchange="saveInfo()">
-                <input type="text" id="allergyInput" placeholder="ประวัติแพ้ยา" class="input-dark border-red-500/30 text-red-300 text-[10px]" onchange="saveInfo()">
+
+            <div class="space-y-3">
+                <div>
+                    <label class="text-[10px] text-slate-400 ml-2 mb-1 block uppercase font-bold">โรคประจำตัว (Comorbidity)</label>
+                    <input type="text" id="comorbidity" placeholder="ระบุโรคประจำตัว..." class="input-dark text-sm" onchange="saveInfo()">
+                </div>
+                <div>
+                    <label class="text-[10px] text-red-400 ml-2 mb-1 block uppercase font-bold">ประวัติแพ้ยา (Drug Allergy)</label>
+                    <input type="text" id="allergyInput" placeholder="ระบุชื่อยาที่แพ้..." class="input-dark border-red-500/20 text-red-200 text-sm" onchange="saveInfo()">
+                </div>
             </div>
         </div>
 
-        <!-- ระบบอ่านหน้าซองยา (OCR Scanner) -->
-        <div class="glass-card rounded-3xl p-5 border-l-4 border-teal-500 space-y-3">
-            <div class="flex justify-between items-center">
-                <h3 class="text-xs font-bold text-teal-400 italic uppercase">Medication Photo Scanner</h3>
-            </div>
+        <!-- ระบบสแกนยา (OCR Scanner) -->
+        <div class="glass-card rounded-[2rem] p-6 border-l-4 border-teal-400 space-y-4">
+            <h3 class="text-sm font-bold text-teal-300 flex items-center gap-2 italic">
+                <i class="fa-solid fa-camera-retro"></i> MEDICATION PHOTO SCANNER
+            </h3>
             
-            <div class="flex flex-col items-center justify-center border-2 border-dashed border-slate-700 rounded-2xl p-4 bg-slate-800/30">
+            <div id="scanZone" class="flex flex-col items-center justify-center border-2 border-dashed border-teal-500/30 rounded-2xl p-6 bg-teal-500/5 hover:bg-teal-500/10 transition-all">
                 <label for="cameraInput" class="cursor-pointer flex flex-col items-center">
-                    <i class="fa-solid fa-camera text-2xl text-teal-400 mb-2"></i>
-                    <span class="text-[10px] text-slate-400">ถ่ายภาพหน้าซองยาเพื่ออ่านชื่อยา</span>
+                    <div class="w-16 h-16 bg-teal-500/20 rounded-full flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-camera text-3xl text-teal-400"></i>
+                    </div>
+                    <span class="text-xs text-white font-medium">ถ่ายภาพหน้าซองยา</span>
+                    <span class="text-[9px] text-slate-400 mt-1">ระบบจะอ่านชื่อยาและขนาดให้อัตโนมัติ</span>
                     <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden" onchange="processImage(this)">
                 </label>
-                <div id="loader" class="hidden mt-3 flex items-center gap-2">
-                    <div class="loading-spinner"></div>
-                    <span class="text-[9px] text-teal-400 italic">กำลังวิเคราะห์ข้อความ...</span>
+
+                <!-- Loading & ยืนยันข้อมูล -->
+                <div id="ocrStatus" class="hidden mt-4 w-full text-center space-y-3">
+                    <div id="loader" class="flex items-center justify-center gap-2">
+                        <div class="loading-spinner"></div>
+                        <span class="text-xs text-teal-400 italic">กำลังวิเคราะห์ข้อความ...</span>
+                    </div>
+                    <div id="confirmZone" class="hidden space-y-2">
+                        <div class="text-[10px] text-slate-300 italic">เราอ่านได้ชื่อยาคือ:</div>
+                        <input type="text" id="tempMedName" class="input-dark text-center font-bold text-teal-400">
+                        <button onclick="confirmMed()" class="w-full btn-primary py-2 rounded-xl text-xs font-bold shadow-lg">เพิ่มรายการนี้</button>
+                    </div>
                 </div>
             </div>
 
-            <!-- รายการยาที่อ่านได้ -->
-            <div id="medContainer" class="space-y-2 mt-4">
-                <!-- รายการยาพร้อมช่อง 'เหลือ' จะแสดงที่นี่ -->
+            <!-- รายการยาที่บันทึกแล้ว -->
+            <div id="medContainer" class="space-y-3 pt-2"></div>
+        </div>
+
+        <!-- Trend Chart (ซ่อน/แสดง) -->
+        <div class="glass-card rounded-[2rem] p-5">
+            <button onclick="toggleGraph()" class="w-full flex justify-between items-center text-teal-300 font-bold text-xs uppercase tracking-widest">
+                <span><i class="fa-solid fa-chart-area mr-2"></i> สถิติแนวโน้ม (Trend Chart)</span>
+                <i id="graphIcon" class="fa-solid fa-chevron-down transition-transform duration-300"></i>
+            </button>
+            <div id="graphSection" class="hidden mt-5 space-y-4">
+                <div class="h-48 w-full"><canvas id="bpChart"></canvas></div>
+                <div class="grid grid-cols-2 gap-2 text-[9px] border-t border-slate-700/50 pt-3">
+                    <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-red-500"></div> รพ. (OBP)</div>
+                    <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-green-400"></div> เฉลี่ยเช้า</div>
+                    <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-yellow-400"></div> เฉลี่ยเย็น</div>
+                    <div class="flex items-center gap-2"><div class="w-2 h-2 border-b-2 border-dashed border-cyan-400"></div> เป้าหมาย 135</div>
+                </div>
             </div>
         </div>
 
-        <!-- กราฟ & บันทึกความดัน (ส่วนเดิมที่สมบูรณ์แล้ว) -->
-        <div class="glass-card rounded-3xl p-4">
-            <div class="h-40 w-full"><canvas id="bpChart"></canvas></div>
-            <div class="grid grid-cols-2 gap-y-1 text-[8px] border-t border-slate-800 pt-2 mt-2">
-                <span class="flex items-center gap-1"><i class="fa-solid fa-circle text-red-500"></i> รพ.</span>
-                <span class="flex items-center gap-1"><i class="fa-solid fa-circle text-[#4ade80]"></i> เช้า</span>
-                <span class="flex items-center gap-1"><i class="fa-solid fa-circle text-[#facc15]"></i> เย็น</span>
-                <span class="flex items-center gap-1 text-[#00ffff] font-bold">--- เป้าหมาย 135</span>
+        <!-- บันทึกความดัน -->
+        <div class="glass-card rounded-[2rem] p-6 border-l-4 border-teal-500">
+            <div class="grid grid-cols-2 gap-3 mb-5">
+                <div class="bg-slate-800/80 p-3 rounded-2xl text-center border border-teal-500/10">
+                    <p class="text-[9px] text-slate-400 uppercase font-bold">AVG Morning</p>
+                    <p id="avgM" class="text-lg font-bold text-teal-400">--/--</p>
+                </div>
+                <div class="bg-slate-800/80 p-3 rounded-2xl text-center border border-yellow-500/10">
+                    <p class="text-[9px] text-slate-400 uppercase font-bold">AVG Evening</p>
+                    <p id="avgE" class="text-lg font-bold text-yellow-400">--/--</p>
+                </div>
             </div>
-        </div>
-
-        <div class="glass-card rounded-3xl p-5 border-l-4 border-teal-500">
-            <div class="flex gap-2 mb-3">
-                <input type="number" id="sysIn" placeholder="SYS" class="w-1/2 bg-slate-800 border border-slate-700 rounded-xl p-3 text-center text-white outline-none">
-                <input type="number" id="diaIn" placeholder="DIA" class="w-1/2 bg-slate-800 border border-slate-700 rounded-xl p-3 text-center text-white outline-none">
+            <div class="flex gap-2 mb-4">
+                <input type="number" id="sysIn" placeholder="SYS" class="w-1/2 bg-slate-900/80 border border-slate-700 rounded-2xl p-4 text-center text-xl font-bold text-white outline-none focus:border-teal-400">
+                <input type="number" id="diaIn" placeholder="DIA" class="w-1/2 bg-slate-900/80 border border-slate-700 rounded-2xl p-4 text-center text-xl font-bold text-white outline-none focus:border-teal-400">
             </div>
-            <button onclick="addRec('home')" class="w-full bg-teal-600 p-3 rounded-xl text-xs font-bold shadow-lg">บันทึกความดันบ้าน</button>
+            <button onclick="addRec()" class="w-full btn-primary p-4 rounded-2xl text-sm font-bold shadow-xl">บันทึกความดันบ้าน</button>
         </div>
 
     </div>
 
     <script>
         let db = { hospital: [], home_m: [], home_e: [], info: { com: "", alr: "", meds: [] } };
-        let myChart;
+        let myChart = null;
 
         function initApp() {
-            const saved = localStorage.getItem('ht_ocr_v13');
+            const saved = localStorage.getItem('HT_DEPLOY_V14');
             if(saved) db = JSON.parse(saved);
             document.getElementById('comorbidity').value = db.info.com || "";
             document.getElementById('allergyInput').value = db.info.alr || "";
@@ -99,80 +135,101 @@
             updateUI();
         }
 
-        // ระบบอ่านชื่อยาจากภาพ (OCR)
+        // OCR & Image Processing
         async function processImage(input) {
             if (!input.files || !input.files[0]) return;
-            
+            const status = document.getElementById('ocrStatus');
             const loader = document.getElementById('loader');
+            const confirmZ = document.getElementById('confirmZone');
+            
+            status.classList.remove('hidden');
             loader.classList.remove('hidden');
+            confirmZ.classList.add('hidden');
 
             try {
                 const result = await Tesseract.recognize(input.files[0], 'eng+tha');
                 const text = result.data.text;
+                const lines = text.split('\n').filter(l => l.trim().length > 4);
                 
-                // ดึงชื่อยาแบบง่าย (สมมติว่าเป็นบรรทัดแรกที่มีข้อความสำคัญ)
-                const lines = text.split('\n').filter(l => l.trim().length > 5);
-                const medName = lines[0] || "ไม่ทราบชื่อยา";
-
-                db.info.meds.push({ id: Date.now(), n: medName, r: "0" });
-                saveMed();
-            } catch (e) {
-                alert("ไม่สามารถอ่านภาพได้ กรุณาลองใหม่อีกครั้ง");
-            } finally {
+                document.getElementById('tempMedName').value = lines[0] || "ไม่ทราบชื่อยา";
                 loader.classList.add('hidden');
-                input.value = '';
+                confirmZ.classList.remove('hidden');
+            } catch (e) {
+                alert("อ่านภาพไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
+                status.classList.add('hidden');
             }
         }
 
-        function updateRemaining(id, val) {
-            const med = db.info.meds.find(m => m.id === id);
-            if(med) { med.r = val; localStorage.setItem('ht_ocr_v13', JSON.stringify(db)); }
-        }
-
-        function saveMed() {
-            localStorage.setItem('ht_ocr_v13', JSON.stringify(db));
-            renderMeds();
-        }
-
-        function delMed(id) {
-            db.info.meds = db.info.meds.filter(m => m.id !== id);
+        function confirmMed() {
+            const name = document.getElementById('tempMedName').value;
+            db.info.meds.push({ id: Date.now(), n: name, r: "0" });
             saveMed();
+            document.getElementById('ocrStatus').classList.add('hidden');
+            document.getElementById('cameraInput').value = '';
         }
 
         function renderMeds() {
             const list = document.getElementById('medContainer');
             list.innerHTML = db.info.meds.map((m, i) => `
-                <div class="bg-slate-800/60 p-3 rounded-2xl border border-slate-700 space-y-2 animate-fade-in">
+                <div class="bg-slate-900/60 p-4 rounded-2xl border border-teal-500/20 space-y-3 shadow-inner">
                     <div class="flex justify-between items-center">
-                        <span class="text-[10px] text-teal-400 font-bold">${i+1}. ${m.n}</span>
-                        <button onclick="delMed(${m.id})" class="text-red-500 text-[10px]"><i class="fa-solid fa-trash"></i></button>
+                        <span class="text-xs text-teal-300 font-bold">${i+1}. ${m.n}</span>
+                        <button onclick="delMed(${m.id})" class="text-red-400 opacity-70 hover:opacity-100"><i class="fa-solid fa-trash-can"></i></button>
                     </div>
-                    <div class="flex items-center gap-3 bg-slate-900/50 p-2 rounded-lg">
-                        <span class="text-[9px] text-slate-400 uppercase">ยาคงเหลือ:</span>
-                        <input type="number" value="${m.r}" onchange="updateRemaining(${m.id}, this.value)" 
-                               class="w-20 bg-slate-800 border border-slate-600 rounded p-1 text-center text-xs text-orange-400 font-bold outline-none">
-                        <span class="text-[9px] text-slate-400">เม็ด</span>
+                    <div class="flex items-center gap-4 bg-teal-500/5 p-3 rounded-xl">
+                        <span class="text-[10px] text-slate-400 font-bold uppercase tracking-tight">ยาคงเหลือในบ้าน</span>
+                        <div class="flex items-center gap-2 ml-auto">
+                            <input type="number" value="${m.r}" onchange="updateRem(${m.id}, this.value)" 
+                                   class="w-16 bg-slate-950 border border-slate-700 rounded-lg p-1 text-center text-sm text-orange-400 font-bold outline-none">
+                            <span class="text-[10px] text-slate-500">เม็ด</span>
+                        </div>
                     </div>
                 </div>
-            `).join('') || '<p class="text-[10px] text-slate-500 text-center py-2 italic">ถ่ายภาพหน้าซองยาเพื่อเพิ่มรายการ</p>';
+            `).join('');
         }
 
-        // ระบบบันทึกและกราฟ (ส่วนคงที่)
+        function updateRem(id, val) {
+            const med = db.info.meds.find(m => m.id === id);
+            if(med) { med.r = val; localStorage.setItem('HT_DEPLOY_V14', JSON.stringify(db)); }
+        }
+
+        function delMed(id) {
+            if(confirm("ลบรายการนี้?")) {
+                db.info.meds = db.info.meds.filter(m => m.id !== id);
+                saveMed();
+            }
+        }
+
+        function saveMed() {
+            localStorage.setItem('HT_DEPLOY_V14', JSON.stringify(db));
+            renderMeds();
+        }
+
         function saveInfo() {
             db.info.com = document.getElementById('comorbidity').value;
             db.info.alr = document.getElementById('allergyInput').value;
-            localStorage.setItem('ht_ocr_v13', JSON.stringify(db));
+            localStorage.setItem('HT_DEPLOY_V14', JSON.stringify(db));
         }
 
-        function addRec(type) {
-            const sys = document.getElementById('sysIn').value;
-            const dia = document.getElementById('diaIn').value;
-            if(sys && dia) {
-                const entry = { id: Date.now(), s: parseInt(sys), d: parseInt(dia), date: new Date().toLocaleDateString('th-TH') };
-                db.home_m.push(entry); // จำลองลงเช้า
-                localStorage.setItem('ht_ocr_v13', JSON.stringify(db));
+        // กราฟและการซ่อน
+        function toggleGraph() {
+            const sec = document.getElementById('graphSection');
+            const icon = document.getElementById('graphIcon');
+            const isHidden = sec.classList.toggle('hidden');
+            icon.style.transform = isHidden ? "rotate(0deg)" : "rotate(180deg)";
+            if(!isHidden) renderChart();
+        }
+
+        function addRec() {
+            const s = document.getElementById('sysIn').value;
+            const d = document.getElementById('diaIn').value;
+            if(s && d) {
+                const entry = { id: Date.now(), s: parseInt(s), d: parseInt(d), date: new Date().toLocaleDateString('th-TH') };
+                db.home_m.push(entry); // บันทึกเป็นค่าเช้า (Default)
+                localStorage.setItem('HT_DEPLOY_V14', JSON.stringify(db));
                 updateUI();
                 document.getElementById('sysIn').value = ''; document.getElementById('diaIn').value = '';
+                alert("บันทึกเรียบร้อยค่ะ");
             }
         }
 
@@ -184,7 +241,7 @@
             };
             document.getElementById('avgM').innerText = avg(db.home_m);
             document.getElementById('avgE').innerText = avg(db.home_e);
-            renderChart();
+            if(!document.getElementById('graphSection').classList.contains('hidden')) renderChart();
         }
 
         function renderChart() {
@@ -201,13 +258,20 @@
                 data: {
                     labels: labels,
                     datasets: [
-                        { label: 'เป้าหมาย', data: Array(labels.length).fill(135), borderColor: '#00ffff', borderDash: [5, 5], pointRadius: 0, fill: false },
-                        { label: 'รพ.', data: labels.map(l => getV(db.hospital, l)), borderColor: '#ef4444', backgroundColor: '#ef4444', pointStyle: 'rectRot', radius: 6, spanGaps: true },
-                        { label: 'เช้า', data: labels.map(l => getV(db.home_m, l)), borderColor: '#4ade80', backgroundColor: '#4ade80', tension: 0.3 },
-                        { label: 'เย็น', data: labels.map(l => getV(db.home_e, l)), borderColor: '#facc15', backgroundColor: '#facc15', tension: 0.3 }
+                        { label: 'เป้าหมาย', data: Array(labels.length).fill(135), borderColor: '#22d3ee', borderDash: [5, 5], pointRadius: 0, fill: false, order: 0 },
+                        { label: 'รพ.', data: labels.map(l => getV(db.hospital, l)), borderColor: '#ef4444', backgroundColor: '#ef4444', pointStyle: 'rectRot', radius: 7, spanGaps: true },
+                        { label: 'เช้า', data: labels.map(l => getV(db.home_m, l)), borderColor: '#4ade80', backgroundColor: '#4ade80', tension: 0.3, spanGaps: true },
+                        { label: 'เย็น', data: labels.map(l => getV(db.home_e, l)), borderColor: '#facc15', backgroundColor: '#facc15', tension: 0.3, spanGaps: true }
                     ]
                 },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { min: 90, max: 190, ticks: { size: 9, color: '#94a3b8' } } } }
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { min: 90, max: 190, ticks: { size: 10, color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                        x: { ticks: { size: 9, color: '#94a3b8' }, grid: { display: false } }
+                    }
+                }
             });
         }
     </script>
