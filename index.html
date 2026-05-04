@@ -18,16 +18,16 @@
 
     <div class="max-w-md mx-auto space-y-4 pb-20">
         
-        <!-- Header -->
-        <div class="glass-card rounded-3xl p-5 border-t-4 border-teal-500">
-            <div class="flex justify-between items-start mb-4">
+        <!-- Header: ข้อมูลผู้ป่วย & เป้าหมาย -->
+        <div class="glass-card rounded-3xl p-5 border-t-4 border-teal-500 space-y-4">
+            <div class="flex justify-between items-start">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 bg-slate-700 rounded-xl overflow-hidden border border-teal-500/50">
                         <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Khemika" alt="avatar">
                     </div>
                     <div>
                         <h2 class="text-md font-bold italic text-teal-400">HT SMART CONTROL</h2>
-                        <p class="text-[10px]">เป้าหมาย: < 135/85 mmHg</p>
+                        <p class="text-[10px]">เป้าหมายความดัน: < 135/85 mmHg</p>
                     </div>
                 </div>
                 <div class="text-right text-[9px] text-slate-400">
@@ -38,19 +38,20 @@
                     </button>
                 </div>
             </div>
+
             <div class="grid grid-cols-2 gap-2">
                 <div id="allergyBox" class="bg-red-500/10 p-2 rounded-xl border border-red-500/20 flex items-center gap-2">
                     <i class="fa-solid fa-triangle-exclamation text-red-500 text-[10px]"></i>
                     <span id="allergyText" class="text-[9px] text-red-200 italic">รอการสแกน...</span>
                 </div>
-                <div class="bg-teal-500/10 p-2 rounded-xl border border-teal-500/20 text-center flex flex-col justify-center text-[10px]">
+                <div class="bg-teal-500/10 p-2 rounded-xl border border-teal-500/20 text-center flex flex-col justify-center">
                     <p class="text-[8px] text-teal-300 font-bold uppercase">นัดครั้งต่อไป</p>
-                    <p>25 มิ.ย. 69</p>
+                    <p class="text-[10px] text-white">25 มิ.ย. 69</p>
                 </div>
             </div>
         </div>
 
-        <!-- Section: กราฟ (Control Chart 4 สี) -->
+        <!-- Section: สถิติแนวโน้ม (Control Chart 4 สี) -->
         <div class="glass-card rounded-3xl p-4">
             <button onclick="toggleGraph()" class="w-full flex justify-between items-center text-teal-300 font-semibold text-xs mb-2">
                 <span><i class="fa-solid fa-chart-line mr-2"></i> สถิติแนวโน้ม (เฉลี่ยรายวัน)</span>
@@ -60,14 +61,14 @@
                 <div class="h-56 w-full"><canvas id="bpChart"></canvas></div>
                 <div class="grid grid-cols-2 gap-y-1 text-[8px] border-t border-slate-800 pt-2 px-1">
                     <span class="flex items-center gap-1"><i class="fa-solid fa-circle text-red-500"></i> รพ. (OBP)</span>
-                    <span class="flex items-center gap-1"><i class="fa-solid fa-circle text-[#4ade80]"></i> เฉลี่ยบ้าน-เช้า</span>
-                    <span class="flex items-center gap-1"><i class="fa-solid fa-circle text-[#facc15]"></i> เฉลี่ยบ้าน-เย็น</span>
-                    <span class="flex items-center gap-1 text-white font-bold italic">--- เป้าหมาย (135 mmHg)</span>
+                    <span class="flex items-center gap-1"><i class="fa-solid fa-circle text-[#4ade80]"></i> เฉลี่ยเช้า</span>
+                    <span class="flex items-center gap-1"><i class="fa-solid fa-circle text-[#facc15]"></i> เฉลี่ยเย็น</span>
+                    <span class="flex items-center gap-1 text-[#00ffff] font-bold italic">--- เป้าหมาย (135 mmHg)</span>
                 </div>
             </div>
         </div>
 
-        <!-- Input Section -->
+        <!-- Section: การบันทึกข้อมูล -->
         <div class="space-y-3">
             <!-- บันทึกที่บ้าน -->
             <div class="glass-card rounded-3xl p-5 border-l-4 border-teal-500">
@@ -90,12 +91,12 @@
                     <input type="number" id="sysIn" placeholder="SYS" class="w-1/2 bg-slate-800 border border-slate-700 rounded-xl p-3 text-center text-white outline-none">
                     <input type="number" id="diaIn" placeholder="DIA" class="w-1/2 bg-slate-800 border border-slate-700 rounded-xl p-3 text-center text-white outline-none">
                 </div>
-                <button onclick="addRec('home')" class="w-full bg-teal-600 p-3 rounded-xl text-xs font-bold">บันทึกค่าบ้าน</button>
+                <button onclick="addRec('home')" class="w-full bg-teal-600 p-3 rounded-xl text-xs font-bold shadow-lg">บันทึกค่าบ้าน</button>
             </div>
-            
+
             <!-- บันทึกที่ รพ. -->
             <div class="glass-card rounded-3xl p-5 border-l-4 border-red-500">
-                <h3 class="text-[11px] font-bold text-red-400 mb-2 uppercase italic">Hospital (คัดกรอง รพ.)</h3>
+                <h3 class="text-[11px] font-bold text-red-400 mb-2 uppercase italic">Hospital (รพ.)</h3>
                 <div class="flex gap-2">
                     <input type="number" id="hSys" placeholder="SYS" class="w-1/2 bg-slate-800 border border-slate-700 rounded-xl p-2 text-center text-white outline-none">
                     <input type="number" id="hDia" placeholder="DIA" class="w-1/2 bg-slate-800 border border-slate-700 rounded-xl p-2 text-center text-white outline-none">
@@ -115,7 +116,7 @@
         let myChart;
 
         function initApp() {
-            const saved = localStorage.getItem('ht_final_fixed_v8');
+            const saved = localStorage.getItem('ht_final_cyan_v9');
             if(saved) db = JSON.parse(saved);
             updateUI();
         }
@@ -159,7 +160,7 @@
         }
 
         function saveAndRefresh() {
-            localStorage.setItem('ht_final_fixed_v8', JSON.stringify(db));
+            localStorage.setItem('ht_final_cyan_v9', JSON.stringify(db));
             updateUI();
             if(!document.getElementById('historyList').classList.contains('hidden')) renderHistory();
             document.querySelectorAll('input').forEach(i => i.value = '');
@@ -193,13 +194,21 @@
                 data: {
                     labels: allDates,
                     datasets: [
-                        { label: 'เป้าหมาย', data: Array(allDates.length).fill(135), borderColor: '#ffffff', borderWidth: 3, borderDash: [5, 5], pointRadius: 0, fill: false, order: 0, z: 99 },
-                        { label: 'รพ.', data: allDates.map(l => getAvg(db.hospital, l)), borderColor: '#ef4444', backgroundColor: '#ef4444', pointStyle: 'rectRot', radius: 6, spanGaps: true, order: 1 },
+                        { label: 'เป้าหมาย', data: Array(allDates.length).fill(135), borderColor: '#00ffff', borderWidth: 3, borderDash: [5, 5], pointRadius: 0, fill: false, order: 0, z: 99 },
+                        { label: 'รพ.', data: allDates.map(l => getAvg(db.hospital, l)), borderColor: '#ef4444', backgroundColor: '#ef4444', pointStyle: 'rectRot', radius: 7, spanGaps: true, order: 1 },
                         { label: 'เช้า', data: allDates.map(l => getAvg(db.home_m, l)), borderColor: '#4ade80', backgroundColor: '#4ade80', tension: 0.3, spanGaps: true, order: 2 },
                         { label: 'เย็น', data: allDates.map(l => getAvg(db.home_e, l)), borderColor: '#facc15', backgroundColor: '#facc15', tension: 0.3, spanGaps: true, order: 3 }
                     ]
                 },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { min: 90, max: 200, ticks: { size: 9, color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } }, x: { ticks: { size: 8, color: '#94a3b8' } } } }
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    plugins: { legend: { display: false } }, 
+                    scales: { 
+                        y: { min: 90, max: 200, ticks: { size: 9, color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } }, 
+                        x: { ticks: { size: 8, color: '#94a3b8' } } 
+                    } 
+                }
             });
         }
 
@@ -212,7 +221,7 @@
         function renderHistory() {
             const list = document.getElementById('historyList');
             const all = [...db.hospital.map(x=>({...x, t:'hospital', lbl:'รพ.'})), ...db.home_m.map(x=>({...x, t:'home_m', lbl:'เช้า'})), ...db.home_e.map(x=>({...x, t:'home_e', lbl:'เย็น'}))].sort((a,b)=>b.id-a.id);
-            list.innerHTML = '<p class="font-bold border-b border-slate-700 pb-1 text-teal-400 mb-2">ประวัติ/ลบค่าที่ผิด</p>' + 
+            list.innerHTML = '<p class="font-bold border-b border-slate-700 pb-1 text-teal-400 mb-2 italic">ประวัติการบันทึก (ลบค่าที่ผิดได้)</p>' + 
                 all.map(i => `<div class="flex justify-between items-center border-b border-slate-800 py-2"><span>[${i.lbl}] ${i.date}</span><div class="flex gap-3"><b>${i.s}/${i.d}</b><button onclick="deleteItem('${i.t}', ${i.id})" class="text-red-500"><i class="fa-solid fa-trash-can"></i></button></div></div>`).join('') || "ไม่มีข้อมูล";
         }
     </script>
