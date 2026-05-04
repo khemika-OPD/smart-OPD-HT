@@ -4,143 +4,100 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart HT Dashboard - OPD Takhli</title>
-    <!-- ใช้นำเข้า Tailwind CSS เพื่อความสวยงามและรวดเร็ว -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap');
         body { font-family: 'Kanit', sans-serif; background-color: #0f172a; color: #f8fafc; }
         .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .danger-glow { box-shadow: 0 0 15px rgba(239, 68, 68, 0.5); }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
     <div class="max-w-md mx-auto space-y-6">
-        <!-- Header Section -->
-        <div class="flex justify-between items-center mb-8">
+        <!-- หัวข้อหลัก -->
+        <div class="flex justify-between items-center mb-6">
             <div>
                 <h1 class="text-2xl font-bold text-teal-400">HT SMART</h1>
-                <p class="text-sm text-slate-400">Dashboard ติดตามสุขภาพรายบุคคล</p>
+                <p class="text-sm text-slate-400">ข้อมูลสุขภาพของคุณเขมิกา</p>
             </div>
-            <div class="w-12 h-12 bg-teal-500 rounded-full flex items-center justify-center">
+            <div class="w-12 h-12 bg-teal-500 rounded-full flex items-center justify-center shadow-lg shadow-teal-500/20">
                 <i class="fa-solid fa-heart-pulse text-2xl"></i>
             </div>
         </div>
 
-        <!-- Patient Info Card (Personalization) -->
-        <div class="glass-card rounded-3xl p-6 space-y-4">
-            <div class="flex items-center gap-4">
-                <div class="w-16 h-16 bg-slate-700 rounded-2xl overflow-hidden border-2 border-teal-400">
-                     <!-- รูปจำลองคนไข้ -->
-                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Khemika" alt="avatar">
+        <!-- การบันทึกความดัน 2-2-7 -->
+        <div class="glass-card rounded-3xl p-6">
+            <h3 class="text-lg font-medium mb-4 flex items-center gap-2 text-teal-300">
+                <i class="fa-solid fa-file-medical"></i> บันทึกความดัน สูตร 2-2-7
+            </h3>
+            <div class="space-y-4">
+                <div class="flex gap-2">
+                    <input type="number" id="sysIn" placeholder="ตัวบน (SYS)" class="w-1/2 bg-slate-800 border border-slate-600 rounded-xl p-3 text-center text-white focus:border-teal-400 outline-none">
+                    <input type="number" id="diaIn" placeholder="ตัวล่าง (DIA)" class="w-1/2 bg-slate-800 border border-slate-600 rounded-xl p-3 text-center text-white focus:border-teal-400 outline-none">
                 </div>
-                <div>
-                    <h2 class="text-xl font-semibold">คุณเขมิกา พงษ์ศรี</h2>
-                    <p class="text-slate-400">HN: 12345/69</p>
-                </div>
+                <button onclick="addBPRecord()" class="w-full bg-teal-600 hover:bg-teal-500 p-3 rounded-xl font-semibold transition-all">
+                    บันทึกค่าตอนนี้
+                </button>
             </div>
-
-            <!-- ความปลอดภัย: แถบแพ้ยา (Safety First) -->
-            <div class="bg-red-500/20 border border-red-500/50 p-3 rounded-xl flex items-center gap-3 danger-glow">
-                <i class="fa-solid fa-triangle-exclamation text-red-500"></i>
-                <span class="text-sm font-medium text-red-100 italic">แพ้ยา: Penicillin (ผื่นคัน, หายใจไม่ออก)</span>
-            </div>
-
-            <!-- เป้าหมายความดัน (Clinical Goal) -->
-            <div class="grid grid-cols-2 gap-4">
-                <div class="bg-slate-800/50 p-3 rounded-2xl text-center border border-slate-700">
-                    <p class="text-xs text-slate-400">เป้าหมาย (mmHg)</p>
-                    <p class="text-xl font-bold text-teal-400">< 130/80</p>
-                </div>
-                <div class="bg-slate-800/50 p-3 rounded-2xl text-center border border-slate-700">
-                    <p class="text-xs text-slate-400 text-yellow-400">นัดครั้งต่อไป</p>
-                    <p class="text-lg font-bold">25 มิ.ย. 69</p>
-                </div>
+            
+            <!-- ส่วนแสดงผลค่าเฉลี่ย -->
+            <div id="resultBox" class="mt-6 p-4 bg-slate-800/50 rounded-2xl border border-slate-700 text-center hidden">
+                <p class="text-xs text-slate-400 mb-1">ค่าเฉลี่ยของคุณหมอตอนนี้</p>
+                <div id="avgResult" class="text-3xl font-bold text-teal-400">-- / --</div>
+                <p id="healthAdvice" class="text-xs mt-2 text-slate-300 italic"></p>
             </div>
         </div>
-
-        <!-- ฟีเจอร์ที่คุณเสนอ: ถ่ายรูปซองยา -->
+        
+        <!-- ส่วนถ่ายรูปซองยา -->
         <div class="glass-card rounded-3xl p-6">
             <h3 class="text-lg font-medium mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-camera text-teal-400"></i> บันทึกภาพซองยา
+                <i class="fa-solid fa-camera text-teal-400"></i> ถ่ายรูปซองยา
             </h3>
-            <div class="flex flex-col items-center justify-center border-2 border-dashed border-slate-600 rounded-2xl p-8 hover:border-teal-400 transition-colors cursor-pointer" onclick="document.getElementById('medImage').click()">
-                <i class="fa-solid fa-cloud-arrow-up text-3xl text-slate-400 mb-2"></i>
-                <p class="text-sm text-slate-400 text-center italic">คลิกเพื่อถ่ายรูปซองยา <br>หรืออัปโหลดรูปภาพ</p>
-                <input type="file" id="medImage" class="hidden" accept="image/*" capture="environment" onchange="previewImage(event)">
-            </div>
-            <div id="imagePreview" class="mt-4 hidden">
-                <img id="previewImg" src="#" alt="preview" class="rounded-xl w-full border border-slate-600">
+            <div class="border-2 border-dashed border-slate-600 rounded-2xl p-6 text-center cursor-pointer hover:border-teal-400" onclick="document.getElementById('medImage').click()">
+                <i class="fa-solid fa-plus text-2xl text-slate-500 mb-2"></i>
+                <p class="text-xs text-slate-400">คลิกเพื่อถ่ายรูปยาที่ทานประจำ</p>
+                <input type="file" id="medImage" class="hidden" accept="image/*" capture="environment">
             </div>
         </div>
-
-        <!-- เมนูนำทาง (Navigation) -->
-        <div class="grid grid-cols-2 gap-4">
-            <button class="bg-teal-600 hover:bg-teal-500 p-4 rounded-2xl font-semibold transition-all shadow-lg shadow-teal-900/20">
-                <i class="fa-solid fa-plus-circle mb-1 block"></i> จดความดัน 2-2-7
-            </button>
-            <button class="bg-slate-700 hover:bg-slate-600 p-4 rounded-2xl font-semibold transition-all">
-                <i class="fa-solid fa-calculator mb-1 block"></i> นับเม็ดยา
-            </button>
-        </div>
-
     </div>
 
+    <!-- ส่วนสำคัญ: โค้ดทำงานต้องอยู่ใน <script> แบบนี้ค่ะ -->
     <script>
-        function previewImage(event) {
-            const reader = new FileReader();
-            reader.onload = function(){
-                const output = document.getElementById('previewImg');
-                output.src = reader.result;
-                document.getElementById('imagePreview').classList.remove('hidden');
-            };
-            reader.readAsDataURL(event.target.files[0]);
+        let bpRecords = [];
+
+        function addBPRecord() {
+            const sys = parseInt(document.getElementById('sysIn').value);
+            const dia = parseInt(document.getElementById('diaIn').value);
+
+            if (sys && dia) {
+                bpRecords.push({ sys, dia });
+                updateDisplay();
+                document.getElementById('sysIn').value = '';
+                document.getElementById('diaIn').value = '';
+            } else {
+                alert("กรุณากรอกตัวเลขความดันให้ครบนะคะ");
+            }
+        }
+
+        function updateDisplay() {
+            const sumSys = bpRecords.reduce((a, b) => a + b.sys, 0);
+            const sumDia = bpRecords.reduce((a, b) => a + b.dia, 0);
+            const avgSys = Math.round(sumSys / bpRecords.length);
+            const avgDia = Math.round(sumDia / bpRecords.length);
+
+            document.getElementById('resultBox').classList.remove('hidden');
+            document.getElementById('avgResult').innerText = `${avgSys} / ${avgDia}`;
+            
+            const advice = document.getElementById('healthAdvice');
+            if (avgSys < 135 && avgDia < 85) {
+                advice.innerText = "เยี่ยมมากค่ะ! อยู่ในเกณฑ์ปกติ รักษาสุขภาพต่อไปนะคะ";
+                advice.className = "text-xs mt-2 text-green-400";
+            } else {
+                advice.innerText = "ความดันค่อนข้างสูง อย่าลืมทานยาและพักผ่อนนะคะ";
+                advice.className = "text-xs mt-2 text-yellow-400";
+            }
         }
     </script>
 </body>
 </html>
-// --- เพิ่มส่วนนี้ใน <script> เดิมของคุณ ---
-
-// ตัวแปรเก็บค่าความดัน (จำลองการเก็บข้อมูล 1 วัน)
-let bloodPressureData = {
-    morning: [],
-    evening: []
-};
-
-// ฟังก์ชันคำนวณค่าเฉลี่ยตามเกณฑ์ 2-2-7
-function calculateAverage() {
-    const allValues = [...bloodPressureData.morning, ...bloodPressureData.evening];
-    if (allValues.length === 0) return { sys: 0, dia: 0 };
-
-    const sumSys = allValues.reduce((a, b) => a + b.sys, 0);
-    const sumDia = allValues.reduce((a, b) => a + b.dia, 0);
-    
-    return {
-        sys: Math.round(sumSys / allValues.length),
-        dia: Math.round(sumDia / allValues.length)
-    };
-}
-
-// ฟังก์ชันแสดงผลลัพธ์พร้อมคำแนะนำภาษาชาวบ้าน
-function updateDisplay() {
-    const avg = calculateAverage();
-    const resultElement = document.getElementById('avgResult');
-    const adviceElement = document.getElementById('healthAdvice');
-
-    if (avg.sys > 0) {
-        resultElement.innerText = `${avg.sys}/${avg.dia}`;
-        
-        // ให้คำแนะนำตามสีไฟจราจร
-        if (avg.sys < 135 && avg.dia < 85) {
-            resultElement.className = "text-3xl font-bold text-green-400";
-            adviceElement.innerText = "เยี่ยมมากค่ะ! ความดันอยู่ในเกณฑ์ดี รักษาสุขภาพแบบนี้ต่อไปนะ";
-        } else if (avg.sys >= 140 || avg.dia >= 90) {
-            resultElement.className = "text-3xl font-bold text-red-500";
-            adviceElement.innerText = "ความดันเริ่มสูงแล้วนะคะ พักผ่อนให้พอและอย่าลืมทานยาตามสั่งค่ะ";
-        } else {
-            resultElement.className = "text-3xl font-bold text-yellow-400";
-            adviceElement.innerText = "ความดันค่อนข้างสูงนิดหน่อย ระวังเรื่องอาหารเค็มด้วยนะคะ";
-        }
-    }
-}
