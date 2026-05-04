@@ -173,54 +173,86 @@
         }
 
         function updateChart() {
-            const ctx = document.getElementById('bpChart').getContext('2d');
-            if(myChart) myChart.destroy();
-            let labels = [...new Set([...db.hospital, ...db.home_m, ...db.home_e].map(x => x.date))].slice(-7);
-            if (!labels.length) labels = [new Date().toLocaleDateString('th-TH')];
-            const getAvg = (arr, date) => {
-                const d = arr.filter(x => x.date === date);
-                return d.length ? d.reduce((a,b)=>a+b.s,0)/d.length : null;
-            };
-            myChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        { label: 'รพ.', data: labels.map(l => getAvg(db.hospital, l)), borderColor: '#ef4444', backgroundColor: '#ef4444', pointStyle: 'rectRot', radius: 6, spanGaps: true },
-                        { label: 'เช้า', data: labels.map(l => getAvg(db.home_m, l)), borderColor: '#4ade80', backgroundColor: '#4ade80', tension: 0.3, spanGaps: true },
-                        { label: 'เย็น', data: labels.map(l => getAvg(db.home_e, l)), borderColor: '#facc15', backgroundColor: '#facc15', tension: 0.3, spanGaps: true },
-                        { label: 'เป้าหมาย', data: Array(labels.length).fill(135), borderColor: '#ffffff', borderDash: [5, 5], borderWidth: 2, pointRadius: 0, fill: false }
-                    ]
+    const ctx = document.getElementById('bpChart').getContext('2d');
+    if(myChart) myChart.destroy();
+
+    // 1. ดึงวันที่ทั้งหมดจากทุกแหล่งมารวมกัน (ไม่ซ้ำกัน)
+    let allDates = [
+        ...db.hospital.map(x => x.date),
+        ...db.home_m.map(x => x.date),
+        ...db.home_e.map(x => x.date)
+    ];
+    
+    // เรียงลำดับวันที่และเลือก 7 วันล่าสุด
+    let labels = [...new Set(allDates)].sort().slice(-7);
+    
+    // ถ้ายังไม่มีข้อมูลเลย ให้สร้างแกนวันที่ปัจจุบันรอไว้เพื่อให้เส้นขาวขึ้น
+    if (labels.length === 0) labels = [new Date().toLocaleDateString('th-TH')];
+
+    const getDailyAvg = (dataArr, labelDate) => {
+        const dayData = dataArr.filter(x => x.date === labelDate);
+        return dayData.length ? dayData.reduce((a, b) => a + b.s, 0) / dayData.length : null;
+    };
+
+    myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                { 
+                    label: 'รพ.', 
+                    data: labels.map(l => getDailyAvg(db.hospital, l)), 
+                    borderColor: '#ef4444', 
+                    backgroundColor: '#ef4444', 
+                    pointStyle: 'rectRot', 
+                    radius: 6,
+                    spanGaps: true // บังคับลากเส้นเชื่อมแม้ข้อมูลขาด
                 },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { min: 90, max: 200, ticks: { size: 9, color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } }, x: { ticks: { size: 8, color: '#94a3b8' } } } }
-            });
+                { 
+                    label: 'เช้า', 
+                    data: labels.map(l => getDailyAvg(db.home_m, l)), 
+                    borderColor: '#4ade80', 
+                    backgroundColor: '#4ade80', 
+                    tension: 0.3,
+                    pointRadius: 5,
+                    spanGaps: true 
+                },
+                { 
+                    label: 'เย็น', 
+                    data: labels.map(l => getDailyAvg(db.home_e, l)), 
+                    borderColor: '#facc15', 
+                    backgroundColor: '#facc15', 
+                    tension: 0.3,
+                    pointRadius: 5,
+                    spanGaps: true 
+                },
+                { 
+                    label: 'เป้าหมาย', 
+                    data: Array(labels.length).fill(135), 
+                    borderColor: '#ffffff', // เส้นขาวประ
+                    borderDash: [5, 5],
+                    borderWidth: 2,
+                    pointRadius: 0, 
+                    fill: false,
+                    z: -1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { 
+                    min: 90, max: 200, 
+                    ticks: { color: '#94a3b8', font: { size: 9 } },
+                    grid: { color: 'rgba(255,255,255,0.05)' }
+                },
+                x: { 
+                    ticks: { color: '#94a3b8', font: { size: 8 } },
+                    grid: { display: false }
+                }
+            },
+            plugins: { legend: { display: false } }
         }
-
-        function toggleHistory() {
-            const list = document.getElementById('historyList');
-            list.classList.toggle('hidden');
-            if(!list.classList.contains('hidden')) renderHistory();
-        }
-
-        function renderHistory() {
-            const list = document.getElementById('historyList');
-            const all = [
-                ...db.hospital.map(x=>({...x, type:'hospital', label:'รพ.'})), 
-                ...db.home_m.map(x=>({...x, type:'home_m', label:'เช้า'})), 
-                ...db.home_e.map(x=>({...x, type:'home_e', label:'เย็น'}))
-            ];
-            list.innerHTML = '<p class="font-bold border-b border-slate-700 pb-1 text-teal-400">ประวัติ (กดถังขยะเพื่อลบค่าที่พิมพ์ผิด)</p>' + 
-                all.reverse().map(i => `
-                <div class="flex justify-between items-center border-b border-slate-800 py-1.5">
-                    <span>[${i.label}] ${i.date}</span>
-                    <div class="flex items-center gap-3">
-                        <b class="text-teal-400">${i.s}/${i.d}</b>
-                        <button onclick="deleteItem('${i.type}', ${i.id})" class="text-red-500 hover:text-red-400">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
-                    </div>
-                </div>`).join('') || "ไม่มีข้อมูล";
-        }
-    </script>
-</body>
-</html>
+    });
+}
