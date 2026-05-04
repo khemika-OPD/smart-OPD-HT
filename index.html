@@ -11,150 +11,192 @@
         @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap');
         body { font-family: 'Kanit', sans-serif; background-color: #0f172a; color: #f8fafc; }
         .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .tab-active { background-color: #2dd4bf; color: #0f172a; font-weight: bold; }
+        .danger-glow { border: 1px solid rgba(239, 68, 68, 0.5); box-shadow: 0 0 10px rgba(239, 68, 68, 0.2); }
     </style>
 </head>
 <body class="p-4" onload="initApp()">
 
-    <div class="max-w-md mx-auto space-y-6 pb-20">
-        <!-- Profile & Goal -->
-        <div class="glass-card rounded-3xl p-5 border-t-4 border-teal-500">
-            <div class="flex justify-between items-center mb-4">
+    <div class="max-w-md mx-auto space-y-4 pb-20">
+        
+        <!-- ส่วนหัว: อัตลักษณ์, เป้าหมาย, แพ้ยา, สแกน -->
+        <div class="glass-card rounded-3xl p-5 border-t-4 border-teal-500 space-y-4">
+            <div class="flex justify-between items-start">
                 <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 bg-slate-700 rounded-xl border border-teal-500/50 overflow-hidden">
+                    <div class="w-12 h-12 bg-slate-700 rounded-xl overflow-hidden border border-teal-500/50">
                         <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Khemika" alt="avatar">
                     </div>
                     <div>
-                        <h2 class="text-md font-bold italic underline decoration-teal-500">HT SMART</h2>
-                        <p class="text-[10px] text-teal-400">เป้าหมาย: < 135/85 mmHg</p>
+                        <h2 class="text-md font-bold italic text-teal-400">HT SMART</h2>
+                        <p class="text-[10px]">เป้าหมาย: < 135/85 mmHg</p>
                     </div>
                 </div>
-                <div class="text-right text-[10px] text-slate-400 italic">
+                <div class="text-right text-[10px] text-slate-400">
                     <p>คุณเขมิกา พงษ์ศรี</p>
                     <p>HN: 12345/69</p>
+                    <button onclick="triggerScanner()" class="mt-2 text-teal-400 border border-teal-400/30 px-2 py-1 rounded-lg hover:bg-teal-400/10 transition-all">
+                        <i class="fa-solid fa-expand mr-1"></i> สแกนข้อมูล
+                    </button>
+                </div>
+            </div>
+
+            <!-- แพ้ยา & นัดหมาย -->
+            <div class="grid grid-cols-2 gap-2">
+                <div class="bg-red-500/10 p-2 rounded-xl border border-red-500/20 flex items-center gap-2">
+                    <i class="fa-solid fa-triangle-exclamation text-red-500 text-xs"></i>
+                    <span id="allergyText" class="text-[9px] text-red-200 italic font-medium">รอการสแกน...</span>
+                </div>
+                <div class="bg-teal-500/10 p-2 rounded-xl border border-teal-500/20 flex items-center gap-2 text-center justify-center">
+                    <div class="text-[9px] text-teal-200">
+                        <p class="font-bold">นัดครั้งต่อไป</p>
+                        <p id="nextAppt">25 มิ.ย. 69</p>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Section: สถิติและกราฟ (แบบซ่อนไว้) -->
-        <div class="glass-card rounded-3xl p-6">
-            <button onclick="toggleGraph()" class="w-full flex justify-between items-center text-teal-300 font-semibold text-sm">
-                <span><i class="fa-solid fa-chart-line mr-2"></i> ดูสถิติและความถี่ความดัน</span>
+        <!-- ดูสถิติแนวโน้มความดัน (เปิด/ปิด) -->
+        <div class="glass-card rounded-3xl p-4">
+            <button onclick="toggleGraph()" class="w-full flex justify-between items-center text-teal-300 font-semibold text-xs">
+                <span><i class="fa-solid fa-chart-line mr-2"></i> ดูสถิติแนวโน้มความดัน</span>
                 <i id="graphIcon" class="fa-solid fa-chevron-down"></i>
             </button>
-
-            <div id="graphSection" class="hidden mt-6 space-y-4">
-                <!-- Filter Tabs -->
-                <div class="flex gap-1 bg-slate-800 p-1 rounded-xl text-[10px]">
-                    <button onclick="updateView('week')" id="tab-week" class="flex-1 py-2 rounded-lg tab-active">สัปดาห์</button>
-                    <button onclick="updateView('month')" id="tab-month" class="flex-1 py-2 rounded-lg text-slate-400">รายเดือน</button>
-                    <button onclick="updateView('year')" id="tab-year" class="flex-1 py-2 rounded-lg text-slate-400">รายปี</button>
+            <div id="graphSection" class="hidden mt-4 space-y-4">
+                <div class="flex gap-1 bg-slate-800 p-1 rounded-xl text-[9px]">
+                    <button onclick="updateChart('week')" class="flex-1 py-1 rounded-lg bg-teal-600 text-white">รายสัปดาห์</button>
+                    <button onclick="updateChart('month')" class="flex-1 py-1 rounded-lg text-slate-400">รายเดือน</button>
+                    <button onclick="updateChart('year')" class="flex-1 py-1 rounded-lg text-slate-400">รายปี</button>
                 </div>
-                
-                <div class="h-48 w-full">
-                    <canvas id="bpChart"></canvas>
+                <div class="h-40"><canvas id="bpChart"></canvas></div>
+            </div>
+        </div>
+
+        <!-- บันทึกความดัน: ที่รพ. & ที่บ้าน -->
+        <div class="space-y-3">
+            <!-- ที่รพ. -->
+            <div class="glass-card rounded-3xl p-5 border-l-4 border-red-500/50">
+                <h3 class="text-[11px] font-bold text-red-400 mb-3 uppercase italic"><i class="fa-solid fa-hospital mr-1"></i> บันทึกที่โรงพยาบาล</h3>
+                <div class="flex gap-2">
+                    <input type="number" id="hSys" placeholder="ตัวบน" class="w-1/2 bg-slate-800 border border-slate-700 rounded-xl p-2 text-center text-sm outline-none focus:border-red-500">
+                    <input type="number" id="hDia" placeholder="ตัวล่าง" class="w-1/2 bg-slate-800 border border-slate-700 rounded-xl p-2 text-center text-sm outline-none focus:border-red-500">
+                </div>
+                <button onclick="addRecord('hospital')" class="w-full mt-2 bg-red-600/80 p-2 rounded-xl text-[10px] font-bold">บันทึกค่า รพ.</button>
+            </div>
+
+            <!-- ที่บ้าน -->
+            <div class="glass-card rounded-3xl p-5 border-l-4 border-teal-500">
+                <h3 class="text-[11px] font-bold text-teal-400 mb-3 uppercase italic"><i class="fa-solid fa-house mr-1"></i> บันทึกที่บ้าน (2-2-7)</h3>
+                <div class="flex gap-2 p-1 bg-slate-800 rounded-xl mb-2">
+                    <button onclick="setHomePeriod('morning')" id="btnM" class="w-1/2 py-1.5 rounded-lg bg-teal-600 text-[10px] text-white">ช่วงเช้า</button>
+                    <button onclick="setHomePeriod('evening')" id="btnE" class="w-1/2 py-1.5 rounded-lg text-slate-400 text-[10px]">ช่วงเย็น</button>
+                </div>
+                <div class="flex gap-2">
+                    <input type="number" id="sysIn" placeholder="ตัวบน" class="w-1/2 bg-slate-800 border border-slate-700 rounded-xl p-2 text-center text-sm outline-none focus:border-teal-500">
+                    <input type="number" id="diaIn" placeholder="ตัวล่าง" class="w-1/2 bg-slate-800 border border-slate-700 rounded-xl p-2 text-center text-sm outline-none focus:border-teal-500">
+                </div>
+                <button onclick="addRecord('home')" class="w-full mt-2 bg-teal-600 p-2 rounded-xl text-[10px] font-bold">บันทึกค่าที่บ้าน</button>
+
+                <!-- แสดงค่าเฉลี่ย 7 วันล่าสุด -->
+                <div class="grid grid-cols-2 gap-2 mt-4">
+                    <div class="bg-slate-800/50 p-2 rounded-xl border border-teal-500/20 text-center">
+                        <p class="text-[8px] text-slate-400">เฉลี่ยเช้า (7 วัน)</p>
+                        <p id="avgM" class="text-sm font-bold text-teal-400">--/--</p>
+                    </div>
+                    <div class="bg-slate-800/50 p-2 rounded-xl border border-orange-500/20 text-center">
+                        <p class="text-[8px] text-slate-400">เฉลี่ยเย็น (7 วัน)</p>
+                        <p id="avgE" class="text-sm font-bold text-orange-400">--/--</p>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Section: บันทึกข้อมูล (คงเดิม) -->
-        <div class="grid grid-cols-1 gap-4">
-            <!-- ปุ่มบันทึกที่บ้าน -->
-            <div class="glass-card rounded-3xl p-6 border-l-4 border-teal-500">
-                <h3 class="text-xs font-bold text-teal-400 mb-3 uppercase tracking-wider">บันทึกที่บ้าน (2-2-7)</h3>
-                <div class="flex gap-2 mb-3">
-                    <input type="number" id="sysIn" placeholder="SYS" class="w-1/2 bg-slate-800 border border-slate-700 rounded-xl p-3 text-center text-white outline-none">
-                    <input type="number" id="diaIn" placeholder="DIA" class="w-1/2 bg-slate-800 border border-slate-700 rounded-xl p-3 text-center text-white outline-none">
-                </div>
-                <button onclick="addHomeRecord()" class="w-full bg-teal-600 p-3 rounded-xl text-[11px] font-bold shadow-lg">บันทึกค่า</button>
-            </div>
+        <!-- ปุ่มดูรายละเอียด -->
+        <button onclick="toggleDetails()" class="w-full py-2 text-[10px] text-slate-500 italic hover:text-teal-400 transition-all">
+            <i class="fa-solid fa-list-ul mr-1"></i> ดูรายละเอียดและประวัติทั้งหมด
+        </button>
+        <div id="detailList" class="hidden glass-card rounded-2xl p-4 text-[10px] space-y-2">
+            <p class="font-bold border-b border-slate-700 pb-1">ประวัติความดัน (เรียงจากล่าสุด)</p>
+            <div id="historyItems" class="max-h-40 overflow-y-auto space-y-1"></div>
         </div>
 
-        <!-- Footer Credit -->
-        <p class="text-center text-[9px] text-slate-600 italic">พัฒนาโดย พว. เขมิกา พงษ์ศรี | OPD โรงพยาบาลตาคลี</p>
     </div>
 
     <script>
-        let isGraphVisible = false;
-        let bpData = { morning: [], evening: [] };
+        let db = { hospital: [], home_m: [], home_e: [] };
+        let currentHomePeriod = 'morning';
         let myChart;
 
         function initApp() {
-            const saved = localStorage.getItem('home_data');
-            if(saved) bpData = JSON.parse(saved);
+            const saved = localStorage.getItem('ht_smart_db');
+            if(saved) db = JSON.parse(saved);
+            updateAverages();
+        }
+
+        function triggerScanner() {
+            document.getElementById('allergyText').innerText = "แพ้ยา: Penicillin (ผื่นคัน)";
+            alert("สแกนข้อมูลจากระบบสำเร็จ!");
         }
 
         function toggleGraph() {
-            const section = document.getElementById('graphSection');
+            const sec = document.getElementById('graphSection');
             const icon = document.getElementById('graphIcon');
-            isGraphVisible = !isGraphVisible;
-            
-            if(isGraphVisible) {
-                section.classList.remove('hidden');
-                icon.className = "fa-solid fa-chevron-up";
-                updateView('week'); // แสดงกราฟเริ่มต้นที่รายสัปดาห์
+            sec.classList.toggle('hidden');
+            icon.classList.toggle('fa-chevron-up');
+            if(!sec.classList.contains('hidden')) updateChart('week');
+        }
+
+        function setHomePeriod(p) {
+            currentHomePeriod = p;
+            document.getElementById('btnM').className = p === 'morning' ? "w-1/2 py-1.5 rounded-lg bg-teal-600 text-white text-[10px]" : "w-1/2 py-1.5 rounded-lg text-slate-400 text-[10px]";
+            document.getElementById('btnE').className = p === 'evening' ? "w-1/2 py-1.5 rounded-lg bg-teal-600 text-white text-[10px]" : "w-1/2 py-1.5 rounded-lg text-slate-400 text-[10px]";
+        }
+
+        function addRecord(type) {
+            if(type === 'hospital') {
+                const s = document.getElementById('hSys').value, d = document.getElementById('hDia').value;
+                if(s && d) db.hospital.push({ s: parseInt(s), d: parseInt(d), date: new Date().toLocaleDateString('th-TH') });
             } else {
-                section.classList.add('hidden');
-                icon.className = "fa-solid fa-chevron-down";
+                const s = document.getElementById('sysIn').value, d = document.getElementById('diaIn').value;
+                if(s && d) {
+                    const entry = { s: parseInt(s), d: parseInt(d), date: new Date().toLocaleDateString('th-TH') };
+                    if(currentHomePeriod === 'morning') db.home_m.push(entry); else db.home_e.push(entry);
+                }
+            }
+            localStorage.setItem('ht_smart_db', JSON.stringify(db));
+            updateAverages();
+            alert("บันทึกสำเร็จ!");
+        }
+
+        function updateAverages() {
+            const calc = (arr) => {
+                const last7 = arr.slice(-7);
+                if(!last7.length) return "--/--";
+                return Math.round(last7.reduce((a,b)=>a+b.s,0)/last7.length) + "/" + Math.round(last7.reduce((a,b)=>a+b.d,0)/last7.length);
+            };
+            document.getElementById('avgM').innerText = calc(db.home_m);
+            document.getElementById('avgE').innerText = calc(db.home_e);
+        }
+
+        function toggleDetails() {
+            const list = document.getElementById('detailList');
+            list.classList.toggle('hidden');
+            if(!list.classList.contains('hidden')) {
+                const hist = document.getElementById('historyItems');
+                const all = [...db.hospital.map(x=>({...x, t:'รพ.'})), ...db.home_m.map(x=>({...x, t:'เช้า'})), ...db.home_e.map(x=>({...x, t:'เย็น'}))];
+                hist.innerHTML = all.reverse().map(i => `<div class="flex justify-between border-b border-slate-800 py-1"><span>[${i.t}] ${i.date}</span><span class="font-bold text-teal-400">${i.s}/${i.d}</span></div>`).join('');
             }
         }
 
-        function updateView(view) {
-            // ปรับแต่ง UI ของ Tab
-            const tabs = ['week', 'month', 'year'];
-            tabs.forEach(t => {
-                document.getElementById('tab-' + t).className = (t === view) ? 
-                    "flex-1 py-2 rounded-lg tab-active" : "flex-1 py-2 rounded-lg text-slate-400";
-            });
-
-            // จำลองการดึงข้อมูลตามความถี่ (ในอนาคตอาจารย์สามารถเพิ่ม Logic แยกวันที่จริงได้ค่ะ)
-            renderChart(view);
-        }
-
-        function renderChart(view) {
+        function updateChart(view) {
             const ctx = document.getElementById('bpChart').getContext('2d');
             if(myChart) myChart.destroy();
-
-            // จำลอง Labels ตาม View
-            let labels = [];
-            if(view === 'week') labels = ['จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.', 'อา.'];
-            else if(view === 'month') labels = ['สัปดาห์ 1', 'สัปดาห์ 2', 'สัปดาห์ 3', 'สัปดาห์ 4'];
-            else labels = ['ม.ค.', 'เม.ย.', 'ก.ค.', 'ต.ค.'];
-
             myChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'ความดันตัวบน (SYS)',
-                        data: [120, 135, 128, 140, 132, 125, 130], // ข้อมูลตัวอย่าง
-                        borderColor: '#2dd4bf',
-                        backgroundColor: 'rgba(45, 212, 191, 0.1)',
-                        tension: 0.4,
-                        fill: true
-                    }]
+                    labels: ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.'],
+                    datasets: [{ label: 'SYS', data: [130, 142, 135, 128, 133, 130], borderColor: '#2dd4bf', tension: 0.4 }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { min: 100, max: 180, ticks: { color: '#64748b', font: { size: 9 } } },
-                        x: { ticks: { color: '#64748b', font: { size: 8 } } }
-                    }
-                }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { min: 100, max: 180, ticks: { size: 8 } } } }
             });
-        }
-
-        function addHomeRecord() {
-            const sys = parseInt(document.getElementById('sysIn').value);
-            const dia = parseInt(document.getElementById('diaIn').value);
-            if(sys && dia) {
-                bpData.morning.push({ sys, dia, date: new Date().toISOString() });
-                localStorage.setItem('home_data', JSON.stringify(bpData));
-                alert("บันทึกค่าเรียบร้อยแล้วค่ะ");
-                if(isGraphVisible) updateView('week');
-            }
         }
     </script>
 </body>
