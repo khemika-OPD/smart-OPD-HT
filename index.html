@@ -12,29 +12,47 @@
         body { font-family: 'Kanit', sans-serif; min-height: 100vh; transition: background 0.3s, color 0.3s; }
         .glass-card { border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 8px 32px rgba(0,0,0,0.15); transition: all 0.3s; }
         
-        /* 1. 🌌 คลาสสำหรับโหมดมืดเดิม (Dark Mode) */
+        /* 🌌 1. การตั้งค่าสไตล์สำหรับโหมดมืด (Dark Theme) */
         body.theme-dark { background: #0f172a; color: #f8fafc; }
         body.theme-dark .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border-color: rgba(255, 255, 255, 0.1); color: #f8fafc; }
+        /* ส่วนที่ 1 ในโหมดมืด: สีกรมท่ากระจกใส */
+        body.theme-dark .header-block { background: rgba(30, 41, 59, 0.9); border-top: 4px solid #2dd4bf; color: #f8fafc; }
+        body.theme-dark .header-title { color: #2dd4bf; }
         body.theme-dark .input-profile { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.1); color: #2dd4bf; }
         body.theme-dark .input-comorbidity { background: rgba(45, 212, 191, 0.15); border-color: rgba(45, 212, 191, 0.5); color: #2dd4bf; }
         body.theme-dark .input-allergy { background: rgba(244, 63, 94, 0.15); border-color: rgba(244, 63, 94, 0.5); color: #fb7185; }
         body.theme-dark .btn-gradient { background: linear-gradient(90deg, #0d9488 0%, #2dd4bf 100%); }
+        body.theme-dark .input-bp-box { background: rgba(255, 255, 255, 0.9); color: #0f172a; border: 2px solid #2dd4bf; }
 
-        /* 2. 🌿 คลาสสำหรับธีมสว่างธรรมชาติ (Green Light) */
+        /* 🌿 2. การตั้งค่าสไตล์สำหรับธีมสว่างธรรมชาติ (Green Theme) */
         body.theme-green { background: #eef2f3; color: #1e293b; }
         body.theme-green .glass-card { background: #ffffff; border-color: #e2e8f0; color: #1e293b; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        body.theme-green .input-profile { background: #f8fafc; border-color: #cbd5e1; color: #1e4620; }
-        body.theme-green .input-comorbidity { background: rgba(30, 70, 32, 0.05); border-color: #1e4620; color: #1e4620; }
-        body.theme-green .input-allergy { background: rgba(244, 63, 94, 0.08); border-color: #ef4444; color: #dc2626; }
+        /* ส่วนที่ 1 ในโหมดเขียว: เปลี่ยนเป็นสีเขียวใบไม้เข้มเต็มผืนตามขอเด่น ๆ โดน ๆ 🚀 */
+        body.theme-green .header-block { background: #1e4620; color: #ffffff; border-top: none; box-shadow: 0 10px 30px rgba(30, 70, 32, 0.2); }
+        body.theme-green .header-title { color: #a7f3d0; }
+        body.theme-green .header-subtitle { color: #e2e8f0; }
+        body.theme-green .input-profile { background: rgba(255, 255, 255, 0.15); border-color: rgba(255, 255, 255, 0.25); color: #ffffff; }
+        body.theme-green .input-profile::placeholder { color: #cbd5e1; }
+        body.theme-green .input-comorbidity { background: rgba(255, 255, 255, 0.15); border-color: #a7f3d0; color: #ffffff; }
+        body.theme-green .input-comorbidity::placeholder { color: #cbd5e1; }
+        body.theme-green .input-allergy { background: #fee2e2; border-color: #ef4444; color: #b91c1c; }
         body.theme-green .btn-gradient { background: linear-gradient(90deg, #1e4620 0%, #2e7d32 100%); }
+        body.theme-green .input-bp-box { background: #f8fafc; color: #1e4620; border: 2px solid #1e4620; }
 
-        /* 3. 🌊 คลาสสำหรับธีมฟ้าใสโมเดิร์น (Modern Blue) */
+        /* 🌊 3. การตั้งค่าสไตล์สำหรับธีมฟ้าใสโมเดิร์น (Blue Theme) */
         body.theme-blue { background: #f0f4f8; color: #0f2c59; }
         body.theme-blue .glass-card { background: #ffffff; border-color: #dbeafe; color: #0f2c59; box-shadow: 0 10px 25px rgba(15, 44, 89, 0.05); }
-        body.theme-blue .input-profile { background: #f8fafc; border-color: #bfdbfe; color: #1a73e8; }
-        body.theme-blue .input-comorbidity { background: rgba(26, 115, 232, 0.05); border-color: #1a73e8; color: #0f2c59; }
-        body.theme-blue .input-allergy { background: rgba(239, 68, 68, 0.08); border-color: #ef4444; color: #b91c1c; }
+        /* ส่วนที่ 1 ในโหมดฟ้า: เปลี่ยนเป็นสีน้ำเงินครามเข้มเด่นสง่าเต็มผืน 🚀 */
+        body.theme-blue .header-block { background: #0f2c59; color: #ffffff; border-top: none; box-shadow: 0 10px 30px rgba(15, 44, 89, 0.15); }
+        body.theme-blue .header-title { color: #93c5fd; }
+        body.theme-blue .header-subtitle { color: #e2e8f0; }
+        body.theme-blue .input-profile { background: rgba(255, 255, 255, 0.12); border-color: rgba(255, 255, 255, 0.2); color: #ffffff; }
+        body.theme-blue .input-profile::placeholder { color: #cbd5e1; }
+        body.theme-blue .input-comorbidity { background: rgba(255, 255, 255, 0.12); border-color: #93c5fd; color: #ffffff; }
+        body.theme-blue .input-comorbidity::placeholder { color: #cbd5e1; }
+        body.theme-blue .input-allergy { background: #fee2e2; border-color: #ef4444; color: #b91c1c; }
         body.theme-blue .btn-gradient { background: linear-gradient(90deg, #0f2c59 0%, #1a73e8 100%); }
+        body.theme-blue .input-bp-box { background: #f0fdfa; color: #0f2c59; border: 2px solid #1a73e8; }
     </style>
 </head>
 <body class="p-4 pb-12 theme-dark" onload="initApp()">
@@ -48,13 +66,13 @@
 
     <div class="max-w-md mx-auto space-y-4">
         
-        <div class="glass-card rounded-[2rem] p-6 border-t-4 border-teal-400 text-center">
-            <h1 class="text-xl font-bold tracking-tight uppercase mb-1">Takhli HT Smart Care</h1>
-            <p class="text-[11px] font-medium mb-4 opacity-90">แอปพลิเคชันดูแลผู้ป่วยความดันโลหิตสูงอัจฉริยะ โรงพยาบาลตาคลี</p>
+        <div class="glass-card header-block rounded-[2rem] p-6 text-center">
+            <h1 class="text-xl font-bold tracking-tight uppercase mb-1 header-title">Takhli HT Smart Care</h1>
+            <p class="text-[11px] font-medium mb-4 opacity-90 header-subtitle">แอปพลิเคชันดูแลผู้ป่วยความดันโลหิตสูงอัจฉริยะ โรงพยาบาลตาคลี</p>
             
-            <div class="flex items-center gap-4 py-4 border-y border-slate-700/30 my-4 text-left">
-                <div class="w-14 h-14 bg-teal-500/20 rounded-2xl flex items-center justify-center border border-teal-400/30">
-                    <i class="fa-solid fa-address-card text-2xl text-teal-400"></i>
+            <div class="flex items-center gap-4 py-4 border-y border-white/20 my-4 text-left">
+                <div class="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center border border-white/20">
+                    <i class="fa-solid fa-address-card text-2xl"></i>
                 </div>
                 <div class="flex-1 space-y-2">
                     <input type="text" id="patientHN" placeholder="ใส่ HN ผู้ป่วย..." class="input-profile font-bold italic" onchange="saveInfo()">
@@ -104,11 +122,11 @@
             </button>
             <div id="bpResultSection" class="hidden space-y-5 pt-2 text-center">
                 <div class="grid grid-cols-2 gap-3">
-                    <div class="bg-slate-800/20 p-4 rounded-2xl text-center border border-slate-400/20 shadow-inner">
+                    <div class="bg-slate-800/10 p-4 rounded-2xl text-center border border-slate-400/20 shadow-inner">
                         <p class="text-[11px] uppercase font-bold tracking-wider mb-1">🌤️ เฉลี่ยเช้า (7 วัน)</p>
                         <p id="avgM" class="text-3xl font-extrabold text-green-500 font-mono tracking-tight">--/--</p>
                     </div>
-                    <div class="bg-slate-800/20 p-4 rounded-2xl text-center border border-slate-400/20 shadow-inner">
+                    <div class="bg-slate-800/10 p-4 rounded-2xl text-center border border-slate-400/20 shadow-inner">
                         <p class="text-[11px] uppercase font-bold tracking-wider mb-1">🌙 เฉลี่ยเย็น (7 วัน)</p>
                         <p id="avgE" class="text-3xl font-extrabold text-yellow-500 font-mono tracking-tight">--/--</p>
                     </div>
@@ -119,9 +137,10 @@
                     <button onclick="setPeriod('evening')" id="btnE" class="flex-1 py-2.5 rounded-xl text-slate-400 text-xs font-bold transition-all">เย็น</button>
                     <button onclick="setPeriod('hospital')" id="btnH" class="flex-1 py-2.5 rounded-xl text-slate-400 text-xs font-bold transition-all">รพ.</button>
                 </div>
+                
                 <div class="flex gap-3">
-                    <input type="number" id="sysIn" placeholder="ตัวบน (SYS)" class="w-1/2 bg-slate-950 border border-slate-700 rounded-2xl p-4 text-center text-2xl font-bold text-white outline-none focus:border-teal-400">
-                    <input type="number" id="diaIn" placeholder="ตัวล่าง (DIA)" class="w-1/2 bg-slate-950 border border-slate-700 rounded-2xl p-4 text-center text-2xl font-bold text-white outline-none focus:border-teal-400">
+                    <input type="number" id="sysIn" placeholder="ตัวบน (SYS)" class="w-1/2 input-bp-box rounded-2xl p-4 text-center text-2xl font-bold outline-none transition-all">
+                    <input type="number" id="diaIn" placeholder="ตัวล่าง (DIA)" class="w-1/2 input-bp-box rounded-2xl p-4 text-center text-2xl font-bold outline-none transition-all">
                 </div>
                 
                 <div id="evalArea" class="hidden p-4 rounded-2xl border text-left space-y-2 transition-all">
@@ -143,7 +162,7 @@
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none opacity-60">
                         <i class="fa-solid fa-calendar-check text-sm"></i>
                     </div>
-                    <input type="date" id="nextAppointDate" onchange="saveAppointment()" class="w-full bg-slate-950/20 border border-slate-700 rounded-xl py-3 pl-10 pr-4 text-sm font-bold text-teal-500 outline-none focus:border-amber-500 transition">
+                    <input type="date" id="nextAppointDate" onchange="saveAppointment()" class="w-full input-bp-box rounded-xl py-3 pl-10 pr-4 text-sm font-bold outline-none transition">
                 </div>
             </div>
         </div>
@@ -177,7 +196,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
-        // เพิ่มฟิลด์ current_theme ในฐานข้อมูลเพื่อจำสีธีมที่เลือกไว้
         let db = { hospital: [], home_m: [], home_e: [], info: { hn: "", name: "", com: "", alr: "", meds: [], app_date: "", current_theme: "dark" } };
         let currentP = 'morning';
         let myChart;
@@ -186,7 +204,6 @@
             const saved = localStorage.getItem('HT_V21_FINAL');
             if(saved) db = JSON.parse(saved);
             
-            // โหลดสีกรณีที่เคยเลือกบันทึกไว้
             const activeTheme = db.info.current_theme || "dark";
             changeTheme(activeTheme);
 
@@ -204,15 +221,11 @@
             updateUI();
         }
 
-        // ฟังก์ชันหัวใจหลักในการเปลี่ยนสีธีมแบบทันทีและจดจำค่าไว้
         function changeTheme(themeName) {
             document.body.removeAttribute('class');
             document.body.className = "p-4 pb-12 theme-" + themeName;
-            
             db.info.current_theme = themeName;
             localStorage.setItem('HT_V21_FINAL', JSON.stringify(db));
-            
-            // รีเซ็ตสีกราฟให้เหมาะสมกับธีมสว่าง/มืด
             if (myChart) renderChart();
         }
 
@@ -225,10 +238,7 @@
 
         function calculateCountdown(dateString) {
             const label = document.getElementById('countdownLabel');
-            if(!dateString) {
-                label.innerText = "ยังไม่มีนัด";
-                return;
-            }
+            if(!dateString) { label.innerText = "ยังไม่มีนัด"; return; }
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             const appointDate = new Date(dateString);
@@ -237,13 +247,9 @@
             const diffTime = appointDate - today;
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-            if (diffDays > 0) {
-                label.innerText = `อีก ${diffDays} วันจะถึงนัด`;
-            } else if (diffDays === 0) {
-                label.innerText = "🚨 มีนัดวันนี้!";
-            } else {
-                label.innerText = `เลยกำหนดนัดมา ${Math.abs(diffDays)} วัน`;
-            }
+            if (diffDays > 0) { label.innerText = `อีก ${diffDays} วันจะถึงนัด`; }
+            else if (diffDays === 0) { label.innerText = "🚨 มีนัดวันนี้!"; }
+            else { label.innerText = `เลยกำหนดนัดมา ${Math.abs(diffDays)} วัน`; }
         }
 
         function toggleSection(sectionId, iconId) {
@@ -335,10 +341,38 @@
             }
         }
 
+        function deleteRecord(id, type) {
+            if(confirm("คุณต้องการลบประวัติบันทึกความดันรายการนี้ใช่ไหมคะ?")) {
+                if(type === 'hospital') db.hospital = db.hospital.filter(x => x.id !== id);
+                else if(type === 'morning') db.home_m = db.home_m.filter(x => x.id !== id);
+                else if(type === 'evening') db.home_e = db.home_e.filter(x => x.id !== id);
+                
+                localStorage.setItem('HT_V21_FINAL', JSON.stringify(db));
+                updateUI();
+                renderHistory();
+                document.getElementById('evalArea').classList.add('hidden');
+            }
+        }
+
         function renderHistory() {
             const area = document.getElementById('historyArea');
-            const all = [...db.hospital.map(x=>({...x, lbl:'รพ.', c:'text-red-500'})), ...db.home_m.map(x=>({...x, lbl:'บ้าน(เช้า)', c:'text-green-500'})), ...db.home_e.map(x=>({...x, lbl:'บ้าน(เย็น)', c:'text-yellow-500'}))].sort((a,b)=>b.id-a.id);
-            area.innerHTML = all.map(i => `<div class="flex justify-between items-center bg-slate-800/10 p-3 rounded-2xl border border-slate-400/20 mb-1"><span class="text-[10px] font-bold ${i.c}">${i.lbl} [${i.date}]</span><b class="text-sm font-mono">${i.s}/${i.d}</b></div>`).join('') || '<p class="text-center text-[10px] opacity-60 py-4 italic">ยังไม่มีประวัติการบันทึก</p>';
+            const all = [
+                ...db.hospital.map(x=>({...x, lbl:'รพ.', c:'text-red-500', type:'hospital'})), 
+                ...db.home_m.map(x=>({...x, lbl:'บ้าน(เช้า)', c:'text-green-500', type:'morning'})), 
+                ...db.home_e.map(x=>({...x, lbl:'บ้าน(เย็น)', c:'text-yellow-500', type:'evening'}))
+            ].sort((a,b)=>b.id-a.id);
+            
+            area.innerHTML = all.map(i => `
+                <div class="flex justify-between items-center bg-slate-800/10 p-3 rounded-2xl border border-slate-400/20 mb-1">
+                    <span class="text-[10px] font-bold ${i.c}">${i.lbl} [${i.date}]</span>
+                    <div class="flex items-center gap-3">
+                        <b class="text-sm font-mono">${i.s}/${i.d}</b>
+                        <button onclick="deleteRecord(${i.id}, '${i.type}')" class="text-red-400/70 hover:text-red-600 px-1 py-0.5 text-xs">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('') || '<p class="text-center text-[10px] opacity-60 py-4 italic">ยังไม่มีประวัติการบันทึก</p>';
         }
 
         function saveInfo() {
@@ -367,7 +401,6 @@
             if(!labels.length) labels = [new Date().toLocaleDateString('th-TH')];
             const getV = (arr, d) => { const f = arr.filter(x => x.date === d); return f.length ? f.reduce((a,b)=>a+b.s,0)/f.length : null; };
             
-            // ตรวจสอบสีตัวอักษรแกนกราฟตามประเภทธีมเพื่อให้อ่านง่ายสอดคล้องกัน
             const isDark = db.info.current_theme === 'dark';
             const tickColor = isDark ? '#94a3b8' : '#1e293b';
 
