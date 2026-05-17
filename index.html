@@ -22,8 +22,6 @@
         body.theme-dark .input-allergy { background: rgba(244, 63, 94, 0.15); border-color: rgba(244, 63, 94, 0.5); color: #fb7185; }
         body.theme-dark .btn-gradient { background: linear-gradient(90deg, #0d9488 0%, #2dd4bf 100%); }
         body.theme-dark .input-bp-box { background: rgba(255, 255, 255, 0.9); color: #0f172a; border: 2px solid #2dd4bf; }
-        body.theme-dark .accent-text { color: #38bdf8; }
-        body.theme-dark .highlight-box { color: #2dd4bf; font-weight: 600; }
 
         /* 🌿 2. การตั้งค่าสไตล์สำหรับธีมสว่างธรรมชาติ (Green Theme) */
         body.theme-green { background: #eef2f3; color: #1e293b; }
@@ -38,8 +36,6 @@
         body.theme-green .input-allergy { background: #fee2e2; border-color: #ef4444; color: #b91c1c; }
         body.theme-green .btn-gradient { background: linear-gradient(90deg, #1e4620 0%, #2e7d32 100%); }
         body.theme-green .input-bp-box { background: #f8fafc; color: #1e4620; border: 2px solid #1e4620; }
-        body.theme-green .accent-text { color: #15803d; }
-        body.theme-green .highlight-box { color: #166534; font-weight: 600; }
 
         /* 🌊 3. การตั้งค่าสไตล์สำหรับธีมฟ้าใสโมเดิร์น (Blue Theme) */
         body.theme-blue { background: #f0f4f8; color: #0f2c59; }
@@ -54,8 +50,13 @@
         body.theme-blue .input-allergy { background: #fee2e2; border-color: #ef4444; color: #b91c1c; }
         body.theme-blue .btn-gradient { background: linear-gradient(90deg, #0f2c59 0%, #1a73e8 100%); }
         body.theme-blue .input-bp-box { background: #f0fdfa; color: #0f2c59; border: 2px solid #1a73e8; }
-        body.theme-blue .accent-text { color: #1d4ed8; }
-        body.theme-blue .highlight-box { color: #1e3a8a; font-weight: 600; }
+
+        /* 🚀 Modal Styles: ปรับปรุงเพื่อความคมชัดสูง */
+        .modal-header-accent { background: #0f172a; color: #fff; padding: 20px; border-radius: 2rem 2rem 0 0; text-align: center; border-bottom: 3px solid #10b981; }
+        .modal-body-content { background: #ffffff; color: #1e293b; padding: 25px; border-radius: 0 0 2rem 2rem; max-height: 480px; overflow-y: auto; }
+        .goal-card { border-left: 5px solid #10b981; background: #f8fafc; padding: 12px 15px; border-radius: 12px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .goal-title { font-weight: 600; font-size: 14px; color: #0f172a; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+        .goal-value { font-weight: 700; font-size: 18px; color: #059669; }
     </style>
 </head>
 <body class="theme-dark" onload="initApp()">
@@ -172,14 +173,13 @@
 
         <div class="glass-card rounded-[2rem] p-6 border-l-4 border-purple-500 space-y-4">
             <button onclick="toggleSection('videoGalleryArea', 'videoToggleIcon')" class="flex justify-between items-center w-full text-sm font-bold uppercase tracking-tight">
-                <span><i class="fa-solid fa-book-medical mr-1"></i> คู่มือสุขศึกษาป้องกันโรคแทรกซ้อน</span>
+                <span><i class="fa-solid fa-book-medical mr-1"></i> คู่มือสุขศึกษาอัจฉริยะ</span>
                 <i id="videoToggleIcon" class="fa-solid fa-chevron-down text-[10px]"></i>
             </button>
             <div id="videoGalleryArea" class="hidden space-y-2 max-h-[22rem] overflow-y-auto pr-1">
                 <p class="text-[11px] opacity-80 leading-relaxed text-center bg-purple-500/10 p-3 rounded-2xl border border-purple-500/20 mb-2">
                     📖 <b>คลังความรู้เชิงคลินิกสำหรับประชาชน</b><br>
-                    อ้างอิงตามมาตรฐานสมาคมความดันโลหิตสูงแห่งประเทศไทย<br>
-                    <span class="text-[9px] opacity-75 text-purple-400 mt-1 block">💡 (คลิกหัวข้อที่สนใจเพื่อเปิดอ่านคำแนะนำการดูแลตนเองทันที)</span>
+                    <span class="text-[9px] opacity-75 text-purple-400 mt-1 block">💡 (คลิกหัวข้อที่สนใจเพื่อเปิดอ่านคำแนะนำทันที)</span>
                 </p>
                 
                 <div class="space-y-1.5 text-left">
@@ -188,31 +188,19 @@
                         <i class="fa-solid fa-chevron-right opacity-50 text-[10px]"></i>
                     </button>
                     <button onclick="showInfoModal(2)" class="w-full text-left p-3 rounded-xl bg-slate-800/20 border border-slate-700/40 text-xs font-medium hover:bg-purple-500/10 transition flex justify-between items-center">
-                        <span class="flex items-center gap-2.5"><i class="fa-solid fa-shield-heart text-purple-500"></i> ตอนที่ 2: การรับมือเมื่อตรวจพบโรค</span>
+                        <span class="flex items-center gap-2.5"><i class="fa-solid fa-shield-heart text-purple-500"></i> ตอนที่ 2: การรับมือเมื่อเป็นโรคความดันฯ</span>
                         <i class="fa-solid fa-chevron-right opacity-50 text-[10px]"></i>
                     </button>
                     <button onclick="showInfoModal(3)" class="w-full text-left p-3 rounded-xl bg-slate-800/20 border border-slate-700/40 text-xs font-medium hover:bg-purple-500/10 transition flex justify-between items-center">
-                        <span class="flex items-center gap-2.5"><i class="fa-solid fa-stethoscope text-purple-500"></i> ตอนที่ 3: แนวทางการรักษาทางการแพทย์</span>
+                        <span class="flex items-center gap-2.5"><i class="fa-solid fa-stethoscope text-purple-500"></i> ตอนที่ 3: แนวทางการรักษาและเป้าหมาย</span>
                         <i class="fa-solid fa-chevron-right opacity-50 text-[10px]"></i>
                     </button>
                     <button onclick="showInfoModal(4)" class="w-full text-left p-3 rounded-xl bg-slate-800/20 border border-slate-700/40 text-xs font-medium hover:bg-purple-500/10 transition flex justify-between items-center">
-                        <span class="flex items-center gap-2.5"><i class="fa-solid fa-triangle-exclamation text-purple-500"></i> ตอนที่ 4: โรคแทรกซ้อนที่ต้องเฝ้าระวัง</span>
+                        <span class="flex items-center gap-2.5"><i class="fa-solid fa-triangle-exclamation text-purple-500"></i> ตอนที่ 4: โรคแทรกซ้อนที่ควรระวัง</span>
                         <i class="fa-solid fa-chevron-right opacity-50 text-[10px]"></i>
                     </button>
                     <button onclick="showInfoModal(5)" class="w-full text-left p-3 rounded-xl bg-slate-800/20 border border-slate-700/40 text-xs font-medium hover:bg-purple-500/10 transition flex justify-between items-center">
-                        <span class="flex items-center gap-2.5"><i class="fa-solid fa-utensils text-purple-500"></i> ตอนที่ 5: หลักการเลือกอาหารชะลอไต</span>
-                        <i class="fa-solid fa-chevron-right opacity-50 text-[10px]"></i>
-                    </button>
-                    <button onclick="showInfoModal(6)" class="w-full text-left p-3 rounded-xl bg-slate-800/20 border border-slate-700/40 text-xs font-medium hover:bg-purple-500/10 transition flex justify-between items-center">
-                        <span class="flex items-center gap-2.5"><i class="fa-solid fa-capsules text-purple-500"></i> ตอนที่ 6: กินยาอย่างไรให้ปลอดภัย</span>
-                        <i class="fa-solid fa-chevron-right opacity-50 text-[10px]"></i>
-                    </button>
-                    <button onclick="showInfoModal(7)" class="w-full text-left p-3 rounded-xl bg-slate-800/20 border border-slate-700/40 text-xs font-medium hover:bg-purple-500/10 transition flex justify-between items-center">
-                        <span class="flex items-center gap-2.5"><i class="fa-solid fa-circle-question text-purple-500"></i> ตอนที่ 7: ความเชื่อที่ผิดเกี่ยวกับยาลดความดัน</span>
-                        <i class="fa-solid fa-chevron-right opacity-50 text-[10px]"></i>
-                    </button>
-                    <button onclick="showInfoModal(8)" class="w-full text-left p-3 rounded-xl bg-slate-800/20 border border-slate-700/40 text-xs font-medium hover:bg-purple-500/10 transition flex justify-between items-center">
-                        <span class="flex items-center gap-2.5"><i class="fa-solid fa-chart-line text-purple-500"></i> ตอนที่ 8: สถานการณ์โรคความดันในประเทศไทย</span>
+                        <span class="flex items-center gap-2.5"><i class="fa-solid fa-utensils text-purple-500"></i> ตอนที่ 5: อาหารกับโรคความดันโลหิตสูง</span>
                         <i class="fa-solid fa-chevron-right opacity-50 text-[10px]"></i>
                     </button>
                 </div>
@@ -228,25 +216,25 @@
         </div>
     </div>
 
-    <div id="infoModal" class="fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-4 hidden backdrop-blur-md transition-all duration-300">
-        <div class="glass-card bg-slate-900/95 text-white rounded-[2.5rem] w-full max-w-md border border-white/10 p-6 space-y-5 shadow-2xl relative">
+    <div id="infoModal" class="fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-4 hidden backdrop-blur-md transition-all">
+        <div class="w-full max-w-md shadow-2xl relative">
             
-            <button onclick="closeInfoModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white text-xl transition">
-                <i class="fa-solid fa-circle-xmark"></i>
-            </button>
+            <button onclick="closeInfoModal()" class="absolute -top-12 right-0 text-white text-3xl"><i class="fa-solid fa-circle-xmark"></i></button>
             
-            <div class="text-center space-y-2 pt-2">
-                <span class="text-[10px] bg-purple-500/20 text-purple-400 px-3 py-1 rounded-full font-bold uppercase tracking-widest">คู่มือสุขภาพประจำตัว</span>
-                <h3 id="modalTitle" class="text-base font-bold text-slate-100 px-2 tracking-wide leading-snug">ชื่อหัวข้อตอน</h3>
+            <div class="modal-header-accent">
+                <span class="text-[10px] bg-purple-500/20 text-emerald-400 px-3 py-1 rounded-full font-bold uppercase tracking-widest border border-emerald-400/30 mb-2 inline-block">คู่มือสุขภาพประชาชน</span>
+                <h3 id="modalTitle" class="text-lg font-bold">ชื่อหัวข้อตอน</h3>
             </div>
 
-            <div id="modalContent" class="bg-slate-950/80 p-5 rounded-2xl border border-white/5 text-[13px] leading-relaxed space-y-4 max-h-72 overflow-y-auto font-light text-slate-300 shadow-inner">
+            <div id="modalContent" class="modal-body-content shadow-inner">
                 เนื้อหาความรู้...
             </div>
 
-            <button onclick="closeInfoModal()" class="w-full btn-gradient text-white font-bold py-3.5 px-4 rounded-xl text-xs shadow-md hover:scale-[1.01] transition-all flex items-center justify-center gap-2 tracking-widest uppercase">
-                <i class="fa-solid fa-circle-check text-sm"></i> ฉันเข้าใจและรับทราบแล้ว
-            </button>
+            <div class="bg-white p-4 rounded-b-[2rem] border-t border-slate-100">
+                <button onclick="closeInfoModal()" id="modalCloseBtn" class="w-full btn-gradient text-white font-bold py-4 px-4 rounded-2xl text-sm shadow-md transition flex items-center justify-center gap-2 tracking-widest uppercase">
+                    <i class="fa-solid fa-circle-check text-lg"></i> ฉันเข้าใจและรับทราบแล้ว
+                </button>
+            </div>
         </div>
     </div>
 
@@ -255,83 +243,67 @@
         let currentP = 'morning';
         let myChart;
 
-        // 🧠 คลังข้อมูลสุขศึกษาประชาชนจำแนกรายตอน (Surgerical Makeover: จัดระเบียบข้อความเด่นชัด และเว้นช่องไฟสวยงาม)
+        // 🧠 คลังข้อมูลสุขศึกษา (Premium Re-design: ปรับ Contrast หัวข้อ และจัดระเบียบเป้าหมายในข้อ 3)
         const educationalContent = {
             1: {
                 title: "ตอนที่ 1: รู้จักกับโรคความดันโลหิตสูง",
-                details: `<div class='space-y-3'>
-                            <p class='flex items-start gap-2'><i class='fa-solid fa-circle-notch text-[10px] mt-1.5 shrink-0 accent-text'></i> <span>โรคความดันโลหิตสูง คือ ภาวะที่ความดันโลหิตตัวบน <span class='highlight-box'>&ge; 140 mmHg</span> หรือตัวล่าง <span class='highlight-box'>&ge; 90 mmHg</span> ที่วัดอย่างถูกต้องต่อเนื่อง</span></p>
-                            <p class='flex items-start gap-2'><i class='fa-solid fa-circle-notch text-[10px] mt-1.5 shrink-0 accent-text'></i> <span>มักถูกเรียกว่า <strong class='text-amber-400 font-medium'>'ฆาตกรเงียบ'</strong> เพราะผู้ป่วยส่วนใหญ่มักไม่มีอาการแสดงใดๆ เตือนล่วงหน้าในช่วงแรก</span></p>
-                            <p class='flex items-start gap-2'><i class='fa-solid fa-circle-notch text-[10px] mt-1.5 shrink-0 accent-text'></i> <span>การละเลยไม่รักษาจะทำลายหลอดเลือดทั่วร่างกายอย่างช้าๆ ส่งผลร้ายทำให้เกิดภาวะหัวใจโต สมองขาดเลือด และไตวายในระยะยาว</span></p>
+                details: `<div class='space-y-4'>
+                            <p class='border-l-4 border-emerald-500 pl-3'><strong class='text-emerald-700'>ความดันโลหิตสูง คืออะไร?</strong><br>ภาวะที่แรงดันเลือดตัวบน <strong>&ge; 140 mmHg</strong> หรือตัวล่าง <strong>&ge; 90 mmHg</strong> ติดต่อกัน</p>
+                            <p class='border-l-4 border-amber-500 pl-3'><strong class='text-amber-700'>ฉายา "ฆาตกรเงียบ"</strong><br>ส่วนใหญ่มักไม่มีอาการแสดงใดๆ เตือนล่วงหน้า จนกว่าอวัยวะภายในจะเริ่มเสียหายหนัก</p>
+                            <p class='border-l-4 border-red-500 pl-3'><strong class='text-red-700'>ผลกระทบระยะยาว</strong><br>หากไม่คุมให้ดี จะทำให้หัวใจโต สมองขาดเลือด (อัมพฤกษ์) และไตวายเรื้อรัง</p>
                           </div>`
             },
             2: {
-                title: "ตอนที่ 2: การรับมือเมื่อเป็นโรคความดันโลหิตสูง",
-                details: `<div class='space-y-3'>
-                            <p class='flex items-start gap-2'><i class='fa-solid fa-circle-notch text-[10px] mt-1.5 shrink-0 accent-text'></i> <span><strong class='text-slate-100 font-medium'>อย่าตื่นตระหนก!</strong> ค่าความดันโลหิตสามารถปรับขึ้นลงชั่วคราวได้จากความเหนื่อยล้า ความเครียด หรือการเดินทาง ให้นั่งพักสบายๆ 5-10 นาทีแล้วจึงวัดซ้ำ</span></p>
-                            <p class='flex items-start gap-2'><i class='fa-solid fa-circle-notch text-[10px] mt-1.5 shrink-0 accent-text'></i> <span>เริ่มต้นวินัยบันทึกความดันที่บ้าน (HBPM) วันละ 2 ช่วงเวลา คือ <span class='text-green-400 font-medium'>ตอนเช้าหลังตื่นนอน</span> และ <span class='text-yellow-400 font-medium'>ตอนเย็นก่อนนอน</span> ติดกัน 7 วันก่อนมาพบแพทย์</span></p>
-                            <p class='flex items-start gap-2'><i class='fa-solid fa-circle-notch text-[10px] mt-1.5 shrink-0 accent-text'></i> <span>การปรับเปลี่ยนพฤติกรรมชีวิต เช่น การลดเค็มและคุมน้ำหนัก สามารถช่วยลดระดับความดันได้ดีเยี่ยมเสมือนการกินยาเพิ่ม 1 เม็ด</span></p>
+                title: "ตอนที่ 2: การรับมือเมื่อเป็นโรคความดันฯ",
+                details: `<div class='space-y-4'>
+                            <p class='border-l-4 border-emerald-500 pl-3'><strong>อย่าตื่นตระหนก:</strong> ความดันขึ้นลงได้ตามความเครียด ให้นั่งพัก 5 นาทีแล้ววัดซ้ำ</p>
+                            <p class='border-l-4 border-emerald-500 pl-3'><strong>บันทึกที่บ้าน (HBPM):</strong> จดค่าความดัน 7 วันก่อนมาพบแพทย์ (เช้า 2 ครั้ง/เย็น 2 ครั้ง)</p>
+                            <p class='border-l-4 border-emerald-500 pl-3'><strong>ปรับพฤติกรรม:</strong> การลดเค็มและลดน้ำหนัก ช่วยลดความดันได้เทียบเท่าการกินยา 1 เม็ด</p>
                           </div>`
             },
             3: {
-                title: "ตอนที่ 3: แนวทางการรักษาทางการแพทย์ พ.ศ. 2567",
-                details: `<div class='space-y-3 bg-slate-900/50 p-1.5 rounded-xl border border-white/5'>
-                            <p class='font-medium text-slate-200 border-b border-white/10 pb-1 mb-2'><i class='fa-solid fa-bullseye accent-text mr-1'></i> เกณฑ์เป้าหมายความดันโลหิตเฉลี่ยที่บ้าน (HBPM)</p>
-                            <div class='space-y-2.5 text-slate-300 pl-1'>
-                                <p class='flex justify-between border-b border-dashed border-white/5 pb-1'><span>• ผู้ป่วยทั่วไป (อายุน้อยกว่า 65 ปี):</span> <span class='highlight-box'>&lt; 130/80 มม.ปรอท</span></p>
-                                <p class='flex justify-between border-b border-dashed border-white/5 pb-1'><span>• ผู้ป่วยเบาหวาน / โรคหัวใจ / เสี่ยงสูง:</span> <span class='highlight-box'>&lt; 125/75 มม.ปรอท</span></p>
-                                <p class='flex justify-between border-b border-dashed border-white/5 pb-1'><span>• ผู้สูงอายุช่วง 65 - 79 ปี (หรือเคยสโตรก):</span> <span class='highlight-box'>&lt; 135/85 มม.ปรอท</span></p>
-                                <p class='flex justify-between pb-0.5'><span>• ผู้สูงอายุวัยเก๋าอายุ 80 ปีขึ้นไป:</span> <span class='highlight-box'>&lt; 140/80 มม.ปรอท</span></p>
+                title: "ตอนที่ 3: เป้าหมายความดันโลหิตที่บ้าน (HBPM)",
+                details: `<div class='space-y-3'>
+                            <p class='text-xs text-slate-500 mb-3 italic text-center'><i class='fa-solid fa-circle-info mr-1'></i> เป้าหมายความดันเฉลี่ยที่วัดจากที่บ้าน (HBPM)</p>
+                            
+                            <div class='goal-card'>
+                                <div class='goal-title'><i class='fa-solid fa-user text-blue-500'></i> ผู้ป่วยทั่วไป (อายุ < 65 ปี)</div>
+                                <div class='goal-value'>&lt; 130 / 80 <span class='text-[10px] text-slate-400 font-normal'>มม.ปรอท</span></div>
                             </div>
-                         </div>
-                         <p class='text-[11px] opacity-80 pt-2 italic text-center text-purple-400'><i class='fa-solid fa-square-poll-vertical mr-1'></i> ควบคุมระดับความดันให้อยู่ในเกณฑ์เป้าหมาย เพื่อปกป้องอวัยวะภายในอย่างยั่งยืน</p>`
+                            
+                            <div class='goal-card' style='border-left-color: #ef4444;'>
+                                <div class='goal-title'><i class='fa-solid fa-hand-holding-medical text-red-500'></i> กลุ่มเบาหวาน / โรคหัวใจ / เสี่ยงสูง</div>
+                                <div class='goal-value' style='color: #dc2626;'>&lt; 125 / 75 <span class='text-[10px] text-slate-400 font-normal'>มม.ปรอท</span></div>
+                            </div>
+
+                            <div class='goal-card' style='border-left-color: #f59e0b;'>
+                                <div class='goal-title'><i class='fa-solid fa-person-cane text-amber-500'></i> ผู้สูงอายุ 65-79 ปี (หรือเคยสโตรก)</div>
+                                <div class='goal-value' style='color: #d97706;'>&lt; 135 / 85 <span class='text-[10px] text-slate-400 font-normal'>มม.ปรอท</span></div>
+                            </div>
+
+                            <div class='goal-card' style='border-left-color: #64748b;'>
+                                <div class='goal-title'><i class='fa-solid fa-person-walking-with-cane text-slate-500'></i> ผู้สูงอายุวัยเก๋า (80 ปีขึ้นไป)</div>
+                                <div class='goal-value' style='color: #475569;'>&lt; 140 / 80 <span class='text-[10px] text-slate-400 font-normal'>มม.ปรอท</span></div>
+                            </div>
+                         </div>`
             },
             4: {
                 title: "ตอนที่ 4: โรคแทรกซ้อนที่ควรระวัง",
-                details: `<div class='space-y-3.5'>
-                            <p class='flex gap-2 items-start'><i class='fa-solid fa-brain text-red-400 mt-1 shrink-0'></i> <span><strong class='text-slate-100 font-medium'>โรคหลอดเลือดสมอง (Stroke):</strong> ทำให้เกิดภาวะอัมพฤกษ์ อัมพาตครึ่งซีก จากหลอดเลือดสมองตีบ ตัน หรือแตก</span></p>
-                            <p class='flex gap-2 items-start'><i class='fa-solid fa-heart-pulse text-red-400 mt-1 shrink-0'></i> <span><strong class='text-slate-100 font-medium'>โรคหัวใจล้มเหลว:</strong> แรงดันที่สูงนานๆ ทำให้กล้ามเนื้อหัวใจหนาตัว โต และอ่อนแรงจนน้ำท่วมปอดได้</span></p>
-                            <p class='flex gap-2 items-start'><i class='fa-solid fa-capsules text-red-400 mt-1 shrink-0'></i> <span><strong class='text-slate-100 font-medium'>ภาวะไตเสื่อมเรื้อรัง (CKD):</strong> แรงดันสูงจะทำลายกลุ่มหลอดเลือดฝอยในไต ส่งผลให้ไตขับของเสียไม่ได้จนเข้าสู่ภาวะไตวาย</span></p>
-                            <div class='bg-red-500/10 border border-red-500/30 p-3 rounded-xl text-red-400 text-[11px] font-bold tracking-wide animate-pulse'>
-                                🚨 สัญญาณเตือนวิกฤต: ปวดหัวรุนแรง ตาพร่ามัว แน่นหน้าอก ปากเบี้ยว แขนขาอ่อนแรง ให้รีบมาตึกอุบัติเหตุ รพ.ตาคลี หรือโทร 1669 ทันที!
+                details: `<div class='space-y-4'>
+                            <p class='flex gap-3 items-start'><i class='fa-solid fa-brain text-red-500 mt-1'></i> <span><strong>สมอง:</strong> อัมพฤกษ์ อัมพาตครึ่งซีก จากเส้นเลือดตีบหรือแตก</span></p>
+                            <p class='flex gap-3 items-start'><i class='fa-solid fa-heart-pulse text-red-500 mt-1'></i> <span><strong>หัวใจ:</strong> กล้ามเนื้อหัวใจโต และหัวใจล้มเหลว (น้ำท่วมปอด)</span></p>
+                            <p class='flex gap-3 items-start'><i class='fa-solid fa-capsules text-red-500 mt-1'></i> <span><strong>ไต:</strong> ไตเสื่อมจนถึงขั้นไตวายเฉียบพลัน</span></p>
+                            <div class='bg-red-50 p-3 rounded-xl text-red-600 text-[11px] font-bold border border-red-100'>
+                                🚨 สัญญาณอันตราย: ปวดหัวรุนแรง ตาพร่ามัว เจ็บแน่นหน้าอก ปากเบี้ยว แขนขาอ่อนแรง ให้รีบไป รพ.ตาคลี ทันที!
                             </div>
                           </div>`
             },
             5: {
                 title: "ตอนที่ 5: อาหารกับโรคความดันโลหิตสูง",
-                details: `<div class='space-y-3'>
-                            <p class='flex items-start gap-2'><i class='fa-solid fa-apple-whole text-emerald-400 mt-1 shrink-0'></i> <span>เน้นการบริโภคอาหารตามหลัก <strong class='text-slate-100 font-medium'>DASH Diet</strong> คือ เน้นผักสด ผลไม้รสไม่หวาน ธัญพืชไม่ขัดสี และเนื้อสัตว์ไขมันต่ำ เช่น เนื้อปลา</span></p>
-                            <p class='flex items-start gap-2'><i class='fa-solid fa-spoon text-amber-500 mt-1 shrink-0'></i> <span>จำกัดการกินโซเดียมไม่เกิน <span class='highlight-box'>2,000 มิลลิกรัม/วัน</span> (เทียบเท่าน้ำปลา ซอสปรุงรส ไม่เกินมื้อละ 1 ช้อนชา)</span></p>
-                            <p class='flex items-start gap-2'><i class='fa-solid fa-ban text-red-400 mt-1 shrink-0'></i> <span>งดเด็ดขาด: อาหารกึ่งสำเร็จรูป ขนมขบเคี้ยว อาหารหมักดอง แกงกะทิ และงดการเติมผงชูรสในอาหาร</span></p>
-                          </div>`
-            },
-            6: {
-                title: "ตอนที่ 6: ยากับโรคความดันโลหิตสูง",
-                details: `<div class='space-y-3'>
-                            <p class='flex items-start gap-2'><i class='fa-solid fa-clock text-blue-400 mt-1 shrink-0'></i> <span>ต้องรับประทานยาอย่างสม่ำเสมอ ตรงเวลาทุกวันตามแพทย์สั่งอย่างเคร่งครัด เพื่อให้ระดับยาในเลือดคงที่ควบคุมแรงดันได้ตลอดวัน</span></p>
-                            <p class='flex items-start gap-2'><i class='fa-solid fa-triangle-exclamation text-amber-500 mt-1 shrink-0'></i> <span><strong class='text-red-400 font-bold'>❌ ห้ามหยุดยาหรือปรับขนาดยาเองเด็ดขาด</strong> แม้จะรู้สึกสบายดี หรือวัดค่าความดันโลหิตได้เกณฑ์สีเขียวปกติแล้วก็ตาม</span></p>
-                            <p class='flex items-start gap-2'><i class='fa-solid fa-circle-info text-blue-400 mt-1 shrink-0'></i> <span>หากลืมกินยา ให้รีบกินทันทีที่นึกได้ แต่ถ้าใกล้ถึงเวลามื้อถัดไปแล้ว ให้ข้ามมื้อที่ลืมไปเลย ห้ามกินยาเบิ้ลเป็นสองเท่า</span></p>
-                          </div>`
-            },
-            7: {
-                title: "ตอนที่ 7: ความเชื่อเกี่ยวกับยาลดความดันโลหิตสูง",
-                details: `<div class='space-y-3.5'>
-                            <div class='border-l-2 border-red-500 pl-3 py-0.5 bg-slate-900/40 rounded-r-xl p-2'>
-                                <p class='text-red-400 font-medium mb-1'>❌ ความเชื่อที่ผิด:</p>
-                                <p class='text-slate-300 font-light italic'>"กินยาความดันติดต่อกันนานๆ จะสะสมทำให้ไตพังหรือไตวาย"</p>
-                            </div>
-                            <div class='border-l-2 border-emerald-500 pl-3 py-0.5 bg-slate-900/40 rounded-r-xl p-2'>
-                                <p class='text-emerald-400 font-medium mb-1'>✅ ข้อเท็จจริงที่ถูกต้อง:</p>
-                                <p class='text-slate-200 font-light font-normal'>ตัวยาลดความดันมีหน้าที่ <span class='highlight-box'>'ช่วยปกป้องไต'</span> ไม่ให้เสื่อมสภาพลง แต่ตัวโรคความดันสูงต่างหากที่ทำลายกลุ่มเส้นเลือดฝอยในไตจนพัง หากเราปล่อยทิ้งไว้และไม่ยอมกินยาควบคุมค่ะ</p>
-                            </div>
-                          </div>`
-            },
-            8: {
-                title: "ตอนที่ 8: สถานการณ์โรคความดันโลหิตสูงในประเทศไทย",
-                details: `<div class='space-y-3'>
-                            <p class='flex items-start gap-2'><i class='fa-solid fa-users text-slate-400 mt-1 shrink-0'></i> <span>ปัจจุบันคนไทยมากกว่า <strong class='text-slate-100 font-medium'>14 ล้านคน</strong> ป่วยเป็นโรคความดันโลหิตสูง และมีแนวโน้มขยายตัวเพิ่มขึ้นในกลุ่มวัยทำงาน</span></p>
-                            <p class='flex items-start gap-2'><i class='fa-solid fa-user-slash text-slate-400 mt-1 shrink-0'></i> <span>ความน่ากลัวคือ ผู้ป่วยมากกว่า 50% <strong class='text-amber-400 font-medium'>ไม่เคยรู้ตัวว่าตนเองป่วย</strong> จนกระทั่งเกิดภาวะเส้นเลือดแตกหรือไตวายเฉียบพลัน</span></p>
-                            <p class='flex items-start gap-2'><i class='fa-solid fa-hospital text-slate-400 mt-1 shrink-0'></i> <span>รพ.ตาคลี ตระหนักถึงวิกฤตนี้ จึงได้พัฒนาระบบ <strong class='text-teal-400 font-medium'>Takhli HT Smart Care</strong> เพื่อช่วยเสริมสร้างทักษะการดูแลตนเองที่บ้านอย่างมีประสิทธิภาพ</span></p>
+                details: `<div class='space-y-4'>
+                            <p class='border-l-4 border-emerald-500 pl-3'><strong>สูตร DASH Diet:</strong> เน้นผัก ผลไม้ ธัญพืชไม่ขัดสี และเนื้อสัตว์ไขมันต่ำ (ปลา)</p>
+                            <p class='border-l-4 border-amber-500 pl-3'><strong>คุมเค็ม:</strong> โซเดียมไม่เกิน 2,000 มก./วัน (น้ำปลาไม่เกิน 1 ช้อนชา/มื้อ)</p>
+                            <p class='border-l-4 border-red-500 pl-3'><strong>งดเด็ดขาด:</strong> อาหารแปรรูป บะหมี่กึ่งสำเร็จรูป ขนมขบเคี้ยว และผงชูรส</p>
                           </div>`
             }
         };
