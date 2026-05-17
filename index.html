@@ -22,7 +22,6 @@
         body.theme-dark .input-allergy { background: rgba(244, 63, 94, 0.15); border-color: rgba(244, 63, 94, 0.5); color: #fb7185; }
         body.theme-dark .btn-gradient { background: linear-gradient(90deg, #0d9488 0%, #2dd4bf 100%); }
         body.theme-dark .input-bp-box { background: rgba(255, 255, 255, 0.9); color: #0f172a; border: 2px solid #2dd4bf; }
-        body.theme-dark .video-btn-active { background-color: rgba(45, 212, 191, 0.2); border-color: #2dd4bf; color: #2dd4bf; }
 
         /* 🌿 2. การตั้งค่าสไตล์สำหรับธีมสว่างธรรมชาติ (Green Theme) */
         body.theme-green { background: #eef2f3; color: #1e293b; }
@@ -37,7 +36,6 @@
         body.theme-green .input-allergy { background: #fee2e2; border-color: #ef4444; color: #b91c1c; }
         body.theme-green .btn-gradient { background: linear-gradient(90deg, #1e4620 0%, #2e7d32 100%); }
         body.theme-green .input-bp-box { background: #f8fafc; color: #1e4620; border: 2px solid #1e4620; }
-        body.theme-green .video-btn-active { background-color: rgba(46, 125, 50, 0.1); border-color: #1e4620; color: #1e4620; }
 
         /* 🌊 3. การตั้งค่าสไตล์สำหรับธีมฟ้าใสโมเดิร์น (Blue Theme) */
         body.theme-blue { background: #f0f4f8; color: #0f2c59; }
@@ -52,7 +50,6 @@
         body.theme-blue .input-allergy { background: #fee2e2; border-color: #ef4444; color: #b91c1c; }
         body.theme-blue .btn-gradient { background: linear-gradient(90deg, #0f2c59 0%, #1a73e8 100%); }
         body.theme-blue .input-bp-box { background: #f0fdfa; color: #0f2c59; border: 2px solid #1a73e8; }
-        body.theme-blue .video-btn-active { background-color: rgba(26, 115, 232, 0.1); border-color: #0f2c59; color: #0f2c59; }
     </style>
 </head>
 <body class="theme-dark" onload="initApp()">
@@ -172,35 +169,42 @@
                 <span><i class="fa-solid fa-video mr-1"></i> วิดีโอความรู้โรคความดันโลหิตสูง</span>
                 <i id="videoToggleIcon" class="fa-solid fa-chevron-down text-[10px]"></i>
             </button>
-            <div id="videoGalleryArea" class="hidden space-y-4">
-                <div class="relative w-full rounded-2xl overflow-hidden bg-black border border-slate-700/50 shadow-inner" style="padding-top: 56.25%;">
-                    <iframe id="videoPlayer" class="absolute top-0 left-0 w-full h-full" src="https://docs.google.com/file/d/10VzCisdZ2G3WnNsk3y3RCOxO770u2V3W/preview" title="Google Drive video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                </div>
-                <div class="space-y-1.5 max-h-60 overflow-y-auto pr-1">
-                    <button id="vidBtn1" onclick="playVideo('10VzCisdZ2G3WnNsk3y3RCOxO770u2V3W', 'vidBtn1')" class="video-btn-active w-full text-left p-2.5 rounded-xl border border-slate-700/40 text-[11px] font-medium transition flex items-start gap-2">
-                        <i class="fa-solid fa-play mt-0.5 shrink-0"></i> <span>ตอนที่ 1: รู้จักกับโรคความดันโลหิตสูง</span>
-                    </button>
-                    <button id="vidBtn2" onclick="playVideo('11W_NhYkfX4XnWNSK3y3RcoXO77Ou2V4W', 'vidBtn2')" class="w-full text-left p-2.5 rounded-xl border border-slate-700/40 text-[11px] font-medium transition flex items-start gap-2 opacity-80 hover:opacity-100">
-                        <i class="fa-solid fa-play mt-0.5 shrink-0"></i> <span>ตอนที่ 2: การรับมือเมื่อเป็นโรคความดันโลหิตสูง</span>
-                    </button>
-                    <button id="vidBtn3" onclick="playVideo('12X_OhZlgZ5YnWNSK3y3RcoXO77Ou2V5W', 'vidBtn3')" class="w-full text-left p-2.5 rounded-xl border border-slate-700/40 text-[11px] font-medium transition flex items-start gap-2 opacity-80 hover:opacity-100">
-                        <i class="fa-solid fa-play mt-0.5 shrink-0"></i> <span>ตอนที่ 3: แนวทางการรักษาโรคความดันโลหิตสูง</span>
-                    </button>
-                    <button id="vidBtn4" onclick="playVideo('13Y_PiAmhA6ZnWNSK3y3RcoXO77Ou2V6W', 'vidBtn4')" class="w-full text-left p-2.5 rounded-xl border border-slate-700/40 text-[11px] font-medium transition flex items-start gap-2 opacity-80 hover:opacity-100">
-                        <i class="fa-solid fa-play mt-0.5 shrink-0"></i> <span>ตอนที่ 4: โรคแทรกซ้อนที่ควรระวัง</span>
-                    </button>
-                    <button id="vidBtn5" onclick="playVideo('14Z_QjBniB7AnWNSK3y3RcoXO77Ou2V7W', 'vidBtn5')" class="w-full text-left p-2.5 rounded-xl border border-slate-700/40 text-[11px] font-medium transition flex items-start gap-2 opacity-80 hover:opacity-100">
-                        <i class="fa-solid fa-play mt-0.5 shrink-0"></i> <span>ตอนที่ 5: อาหารกับโรคความดันโลหิตสูง</span>
-                    </button>
-                    <button id="vidBtn6" onclick="playVideo('15A_RkCojC8BnWNSK3y3RcoXO77Ou2V8W', 'vidBtn6')" class="w-full text-left p-2.5 rounded-xl border border-slate-700/40 text-[11px] font-medium transition flex items-start gap-2 opacity-80 hover:opacity-100">
-                        <i class="fa-solid fa-play mt-0.5 shrink-0"></i> <span>ตอนที่ 6: ยาพ่นและยากับโรคความดันโลหิตสูง</span>
-                    </button>
-                    <button id="vidBtn7" onclick="playVideo('16B_SlDpkD9CnWNSK3y3RcoXO77Ou2V9W', 'vidBtn7')" class="w-full text-left p-2.5 rounded-xl border border-slate-700/40 text-[11px] font-medium transition flex items-start gap-2 opacity-80 hover:opacity-100">
-                        <i class="fa-solid fa-play mt-0.5 shrink-0"></i> <span>ตอนที่ 7: ความเชื่อผิด ๆ เกี่ยวกับยาลดความดัน</span>
-                    </button>
-                    <button id="vidBtn8" onclick="playVideo('17C_TmEqlE0DnWNSK3y3RcoXO77Ou3W0W', 'vidBtn8')" class="w-full text-left p-2.5 rounded-xl border border-slate-700/40 text-[11px] font-medium transition flex items-start gap-2 opacity-80 hover:opacity-100">
-                        <i class="fa-solid fa-play mt-0.5 shrink-0"></i> <span>ตอนที่ 8: สถานการณ์โรคความดันในประเทศไทย</span>
-                    </button>
+            <div id="videoGalleryArea" class="hidden space-y-3">
+                <p class="text-[11px] opacity-70 mb-2 leading-relaxed text-center bg-purple-500/10 p-2 rounded-xl border border-purple-500/20">
+                    🎬 กดเลือกหัวข้อเพื่อเปิดชมวิดีโอความรู้โดยตรงจาก <br><b>สมาคมความดันโลหิตสูงแห่งประเทศไทย</b>
+                </p>
+                <div class="space-y-2">
+                    <a href="https://drive.google.com/drive/folders/1J8sIeVC-pfvBtZiWOK2E9PNsUgvi4svE" target="_blank" class="w-full text-left p-3.5 rounded-xl border border-purple-500 bg-purple-500/10 text-xs font-bold transition flex items-center justify-between hover:scale-[1.02]">
+                        <span class="flex items-center gap-2"><i class="fa-solid fa-folder-open text-purple-400 text-sm"></i> เปิดคลังวิดีโอทั้งหมด (ตอนที่ 1 - 8)</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                    </a>
+                    
+                    <div class="border-t border-slate-700/30 my-2 pt-2 text-[10px] opacity-50 font-bold">แยกตามหัวข้อตอนย่อย:</div>
+
+                    <a href="https://drive.google.com/drive/folders/1J8sIeVC-pfvBtZiWOK2E9PNsUgvi4svE" target="_blank" class="w-full text-left p-2.5 rounded-xl border border-slate-700/40 text-[11px] font-medium opacity-90 hover:opacity-100 transition flex items-center justify-between">
+                        <span>• ตอนที่ 1: รู้จักกับโรคความดันโลหิตสูง</span> <i class="fa-solid fa-play text-[9px]"></i>
+                    </a>
+                    <a href="https://drive.google.com/drive/folders/1J8sIeVC-pfvBtZiWOK2E9PNsUgvi4svE" target="_blank" class="w-full text-left p-2.5 rounded-xl border border-slate-700/40 text-[11px] font-medium opacity-90 hover:opacity-100 transition flex items-center justify-between">
+                        <span>• ตอนที่ 2: การรับมือเมื่อเป็นโรคความดันโลหิตสูง</span> <i class="fa-solid fa-play text-[9px]"></i>
+                    </a>
+                    <a href="https://drive.google.com/drive/folders/1J8sIeVC-pfvBtZiWOK2E9PNsUgvi4svE" target="_blank" class="w-full text-left p-2.5 rounded-xl border border-slate-700/40 text-[11px] font-medium opacity-90 hover:opacity-100 transition flex items-center justify-between">
+                        <span>• ตอนที่ 3: แนวทางการรักษาโรคความดันโลหิตสูง</span> <i class="fa-solid fa-play text-[9px]"></i>
+                    </a>
+                    <a href="https://drive.google.com/drive/folders/1J8sIeVC-pfvBtZiWOK2E9PNsUgvi4svE" target="_blank" class="w-full text-left p-2.5 rounded-xl border border-slate-700/40 text-[11px] font-medium opacity-90 hover:opacity-100 transition flex items-center justify-between">
+                        <span>• ตอนที่ 4: โรคแทรกซ้อนที่ควรระวัง</span> <i class="fa-solid fa-play text-[9px]"></i>
+                    </a>
+                    <a href="https://drive.google.com/drive/folders/1J8sIeVC-pfvBtZiWOK2E9PNsUgvi4svE" target="_blank" class="w-full text-left p-2.5 rounded-xl border border-slate-700/40 text-[11px] font-medium opacity-90 hover:opacity-100 transition flex items-center justify-between">
+                        <span>• ตอนที่ 5: อาหารกับโรคความดันโลหิตสูง</span> <i class="fa-solid fa-play text-[9px]"></i>
+                    </a>
+                    <a href="https://drive.google.com/drive/folders/1J8sIeVC-pfvBtZiWOK2E9PNsUgvi4svE" target="_blank" class="w-full text-left p-2.5 rounded-xl border border-slate-700/40 text-[11px] font-medium opacity-90 hover:opacity-100 transition flex items-center justify-between">
+                        <span>• ตอนที่ 6: ยากับโรคความดันโลหิตสูง</span> <i class="fa-solid fa-play text-[9px]"></i>
+                    </a>
+                    <a href="https://drive.google.com/drive/folders/1J8sIeVC-pfvBtZiWOK2E9PNsUgvi4svE" target="_blank" class="w-full text-left p-2.5 rounded-xl border border-slate-700/40 text-[11px] font-medium opacity-90 hover:opacity-100 transition flex items-center justify-between">
+                        <span>• ตอนที่ 7: ความเชื่อผิด ๆ เกี่ยวกับยาลดความดัน</span> <i class="fa-solid fa-play text-[9px]"></i>
+                    </a>
+                    <a href="https://drive.google.com/drive/folders/1J8sIeVC-pfvBtZiWOK2E9PNsUgvi4svE" target="_blank" class="w-full text-left p-2.5 rounded-xl border border-slate-700/40 text-[11px] font-medium opacity-90 hover:opacity-100 transition flex items-center justify-between">
+                        <span>• ตอนที่ 8: สถานการณ์โรคความดันในประเทศไทย</span> <i class="fa-solid fa-play text-[9px]"></i>
+                    </a>
                 </div>
             </div>
         </div>
@@ -247,28 +251,6 @@
             db.info.current_theme = themeName;
             localStorage.setItem('HT_V21_FINAL', JSON.stringify(db));
             if (myChart) renderChart();
-            updateVideoButtonsStyle();
-        }
-
-        // ฟังก์ชันแกนกลางสำหรับดึงและเล่น Preview วิดีโอตรงจาก Google Drive
-        function playVideo(driveFileId, btnId) {
-            document.getElementById('videoPlayer').src = "https://docs.google.com/file/d/" + driveFileId + "/preview";
-            document.querySelectorAll('#videoGalleryArea button').forEach(b => {
-                b.classList.remove('video-btn-active');
-                b.classList.add('opacity-80');
-            });
-            const activeBtn = document.getElementById(btnId);
-            activeBtn.classList.add('video-btn-active');
-            activeBtn.classList.remove('opacity-80');
-        }
-
-        function updateVideoButtonsStyle() {
-            const activeBtn = document.querySelector('.video-btn-active');
-            if(activeBtn) {
-                activeBtn.classList.remove('video-btn-active');
-                void activeBtn.offsetWidth;
-                activeBtn.classList.add('video-btn-active');
-            }
         }
 
         function saveAppointment() {
