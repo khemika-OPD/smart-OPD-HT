@@ -230,9 +230,9 @@
                 <div class="w-16 h-16 bg-purple-500/10 rounded-full flex items-center justify-center mx-auto border border-purple-500/30 text-purple-400 text-2xl animate-bounce">
                     <i class="fa-solid fa-clapperboard"></i>
                 </div>
-                <p class="text-xs text-slate-300 leading-relaxed px-2">ระบบกำลังนำทางคุณตาคุณยายไปชมวิดีโอความรู้จากทางสมาคมฯ อย่างปลอดภัยค่ะ</p>
+                <p class="text-xs text-slate-300 leading-relaxed px-2">ระบบความปลอดภัยจะเปิดหน้าต่างใหม่ เพื่อให้ผู้สูงอายุรับชมวิดีโอผ่านแอปหลักได้อย่างราบรื่นค่ะ</p>
                 
-                <a id="modalVideoLink" href="#" target="_blank" class="block w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3.5 px-4 rounded-xl text-xs shadow-md transition-all uppercase tracking-wider">
+                <a id="modalVideoLink" href="#" target="_blank" rel="noopener noreferrer" class="block w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3.5 px-4 rounded-xl text-xs shadow-md transition-all uppercase tracking-wider text-center">
                     <i class="fa-solid fa-circle-play mr-1"></i> กดตรงนี้เพื่อเปิดดูวิดีโอ
                 </a>
             </div>
@@ -243,7 +243,6 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
         let db = { hospital: [], home_m: [], home_e: [], info: { hn: "", name: "", com: "", alr: "", meds: [], app_date: "", current_theme: "dark" } };
         let currentP = 'morning';
@@ -278,10 +277,10 @@
             if (myChart) renderChart();
         }
 
-        // ฟังก์ชันควบคุมการเปิด-ปิดหน้าต่างวิดีโอนิรภัย 🚀
+        // 🔥 ฟังก์ชันแบบอัปเกรด: ผูกลิงก์เข้าสู่ปุ่มโครงสร้างตรงๆ แก้ปัญหาเปิดไม่ได้ขาดรอย
         function openVideoModal(title, link) {
             document.getElementById('modalVideoTitle').innerText = title;
-            document.getElementById('modalVideoLink').href = link;
+            document.getElementById('modalVideoLink').setAttribute('href', link);
             document.getElementById('videoModal').classList.remove('hidden');
         }
 
