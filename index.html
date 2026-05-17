@@ -22,6 +22,8 @@
         body.theme-dark .input-allergy { background: rgba(244, 63, 94, 0.15); border-color: rgba(244, 63, 94, 0.5); color: #fb7185; }
         body.theme-dark .btn-gradient { background: linear-gradient(90deg, #0d9488 0%, #2dd4bf 100%); }
         body.theme-dark .input-bp-box { background: rgba(255, 255, 255, 0.9); color: #0f172a; border: 2px solid #2dd4bf; }
+        body.theme-dark .accent-text { color: #38bdf8; }
+        body.theme-dark .highlight-box { color: #2dd4bf; font-weight: 600; }
 
         /* 🌿 2. การตั้งค่าสไตล์สำหรับธีมสว่างธรรมชาติ (Green Theme) */
         body.theme-green { background: #eef2f3; color: #1e293b; }
@@ -36,6 +38,8 @@
         body.theme-green .input-allergy { background: #fee2e2; border-color: #ef4444; color: #b91c1c; }
         body.theme-green .btn-gradient { background: linear-gradient(90deg, #1e4620 0%, #2e7d32 100%); }
         body.theme-green .input-bp-box { background: #f8fafc; color: #1e4620; border: 2px solid #1e4620; }
+        body.theme-green .accent-text { color: #15803d; }
+        body.theme-green .highlight-box { color: #166534; font-weight: 600; }
 
         /* 🌊 3. การตั้งค่าสไตล์สำหรับธีมฟ้าใสโมเดิร์น (Blue Theme) */
         body.theme-blue { background: #f0f4f8; color: #0f2c59; }
@@ -50,6 +54,8 @@
         body.theme-blue .input-allergy { background: #fee2e2; border-color: #ef4444; color: #b91c1c; }
         body.theme-blue .btn-gradient { background: linear-gradient(90deg, #0f2c59 0%, #1a73e8 100%); }
         body.theme-blue .input-bp-box { background: #f0fdfa; color: #0f2c59; border: 2px solid #1a73e8; }
+        body.theme-blue .accent-text { color: #1d4ed8; }
+        body.theme-blue .highlight-box { color: #1e3a8a; font-weight: 600; }
     </style>
 </head>
 <body class="theme-dark" onload="initApp()">
@@ -222,21 +228,24 @@
         </div>
     </div>
 
-    <div id="infoModal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
-        <div class="bg-slate-900 text-white rounded-[2.5rem] w-full max-w-md border border-slate-700 p-6 space-y-4 shadow-2xl relative">
-            <button onclick="closeInfoModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl"><i class="fa-solid fa-circle-xmark"></i></button>
+    <div id="infoModal" class="fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-4 hidden backdrop-blur-md transition-all duration-300">
+        <div class="glass-card bg-slate-900/95 text-white rounded-[2.5rem] w-full max-w-md border border-white/10 p-6 space-y-5 shadow-2xl relative">
             
-            <div class="text-center space-y-1">
-                <span class="text-[10px] bg-purple-500/20 text-purple-400 px-3 py-0.5 rounded-full font-bold uppercase">คู่มือสุขภาพออนไลน์</span>
-                <h3 id="modalTitle" class="text-sm font-bold text-slate-100 px-2 mt-1">ชื่อหัวข้อตอน</h3>
+            <button onclick="closeInfoModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white text-xl transition">
+                <i class="fa-solid fa-circle-xmark"></i>
+            </button>
+            
+            <div class="text-center space-y-2 pt-2">
+                <span class="text-[10px] bg-purple-500/20 text-purple-400 px-3 py-1 rounded-full font-bold uppercase tracking-widest">คู่มือสุขภาพประจำตัว</span>
+                <h3 id="modalTitle" class="text-base font-bold text-slate-100 px-2 tracking-wide leading-snug">ชื่อหัวข้อตอน</h3>
             </div>
 
-            <div id="modalContent" class="bg-slate-950 p-5 rounded-2xl border border-slate-800 text-xs leading-relaxed space-y-2 max-h-64 overflow-y-auto font-light text-slate-300">
+            <div id="modalContent" class="bg-slate-950/80 p-5 rounded-2xl border border-white/5 text-[13px] leading-relaxed space-y-4 max-h-72 overflow-y-auto font-light text-slate-300 shadow-inner">
                 เนื้อหาความรู้...
             </div>
 
-            <button onclick="closeInfoModal()" class="w-full btn-gradient text-white font-bold py-3.5 px-4 rounded-xl text-xs shadow-md transition flex items-center justify-center gap-2">
-                <i class="fa-solid fa-circle-check"></i> ฉันเข้าใจและรับทราบแล้ว
+            <button onclick="closeInfoModal()" class="w-full btn-gradient text-white font-bold py-3.5 px-4 rounded-xl text-xs shadow-md hover:scale-[1.01] transition-all flex items-center justify-center gap-2 tracking-widest uppercase">
+                <i class="fa-solid fa-circle-check text-sm"></i> ฉันเข้าใจและรับทราบแล้ว
             </button>
         </div>
     </div>
@@ -246,39 +255,84 @@
         let currentP = 'morning';
         let myChart;
 
-        // 🧠 คลังข้อมูลสุขศึกษาประชาชนจำแนกรายตอน (แก้ไขสะกดคำและเนื้อหาตามรูปแนบเป๊ะๆ)
+        // 🧠 คลังข้อมูลสุขศึกษาประชาชนจำแนกรายตอน (Surgerical Makeover: จัดระเบียบข้อความเด่นชัด และเว้นช่องไฟสวยงาม)
         const educationalContent = {
             1: {
                 title: "ตอนที่ 1: รู้จักกับโรคความดันโลหิตสูง",
-                details: "• โรคความดันโลหิตสูง คือ ภาวะที่ความดันโลหิตตัวบนมีค่าตั้งแต่140 mmHg ขึ้นไป หรือตัวล่างมีค่าตั้งแต่ 90 mmHg ขึ้นไป ที่วัดอย่างถูกต้องต่อเนื่อง<br>• มักถูกเรียกว่า <strong>'ฆาตกรเงียบ'</strong> เพราะผู้ป่วยส่วนใหญ่มักไม่มีอาการแสดงใดๆ ในช่วงแรก<br>• การละเลยไม่รักษาจะทำลายหลอดเลือดทั่วร่างกายอย่างช้าๆ ส่งผลร้ายต่อหัวใจ สมอง และไตในระยะยาว"
+                details: `<div class='space-y-3'>
+                            <p class='flex items-start gap-2'><i class='fa-solid fa-circle-notch text-[10px] mt-1.5 shrink-0 accent-text'></i> <span>โรคความดันโลหิตสูง คือ ภาวะที่ความดันโลหิตตัวบน <span class='highlight-box'>&ge; 140 mmHg</span> หรือตัวล่าง <span class='highlight-box'>&ge; 90 mmHg</span> ที่วัดอย่างถูกต้องต่อเนื่อง</span></p>
+                            <p class='flex items-start gap-2'><i class='fa-solid fa-circle-notch text-[10px] mt-1.5 shrink-0 accent-text'></i> <span>มักถูกเรียกว่า <strong class='text-amber-400 font-medium'>'ฆาตกรเงียบ'</strong> เพราะผู้ป่วยส่วนใหญ่มักไม่มีอาการแสดงใดๆ เตือนล่วงหน้าในช่วงแรก</span></p>
+                            <p class='flex items-start gap-2'><i class='fa-solid fa-circle-notch text-[10px] mt-1.5 shrink-0 accent-text'></i> <span>การละเลยไม่รักษาจะทำลายหลอดเลือดทั่วร่างกายอย่างช้าๆ ส่งผลร้ายทำให้เกิดภาวะหัวใจโต สมองขาดเลือด และไตวายในระยะยาว</span></p>
+                          </div>`
             },
             2: {
-                title: "ตอนที่ 2: การรับมือเมื่อตรวจพบโรคความดันโลหิตสูง",
-                details: "• อย่าตื่นตระหนก! ความดันโลหิตสามารถปรับขึ้นลงได้จากความเครียดหรือการเดินทาง พักผ่อน 5-10 นาทีแล้ววัดซ้ำ<br>• เริ่มต้นบันทึกความดันที่บ้าน (HBPM) สม่ำเสมอ วันละ 2 ช่วงเวลา (เช้าและเย็น) ติดกัน 7 วันก่อนมาพบแพทย์<br>• การปรับพฤติกรรมชีวิต (Lifestyle Modification) เช่น การลดอาหารเค็มและการคุมน้ำหนัก มีประสิทธิภาพเทียบเท่ากับการกินยา 1 เม็ด"
+                title: "ตอนที่ 2: การรับมือเมื่อเป็นโรคความดันโลหิตสูง",
+                details: `<div class='space-y-3'>
+                            <p class='flex items-start gap-2'><i class='fa-solid fa-circle-notch text-[10px] mt-1.5 shrink-0 accent-text'></i> <span><strong class='text-slate-100 font-medium'>อย่าตื่นตระหนก!</strong> ค่าความดันโลหิตสามารถปรับขึ้นลงชั่วคราวได้จากความเหนื่อยล้า ความเครียด หรือการเดินทาง ให้นั่งพักสบายๆ 5-10 นาทีแล้วจึงวัดซ้ำ</span></p>
+                            <p class='flex items-start gap-2'><i class='fa-solid fa-circle-notch text-[10px] mt-1.5 shrink-0 accent-text'></i> <span>เริ่มต้นวินัยบันทึกความดันที่บ้าน (HBPM) วันละ 2 ช่วงเวลา คือ <span class='text-green-400 font-medium'>ตอนเช้าหลังตื่นนอน</span> และ <span class='text-yellow-400 font-medium'>ตอนเย็นก่อนนอน</span> ติดกัน 7 วันก่อนมาพบแพทย์</span></p>
+                            <p class='flex items-start gap-2'><i class='fa-solid fa-circle-notch text-[10px] mt-1.5 shrink-0 accent-text'></i> <span>การปรับเปลี่ยนพฤติกรรมชีวิต เช่น การลดเค็มและคุมน้ำหนัก สามารถช่วยลดระดับความดันได้ดีเยี่ยมเสมือนการกินยาเพิ่ม 1 เม็ด</span></p>
+                          </div>`
             },
             3: {
                 title: "ตอนที่ 3: แนวทางการรักษาทางการแพทย์ พ.ศ. 2567",
-                details: "• <strong>เป้าหมายความดันโลหิตเมื่อวัดที่บ้าน (HBPM)สำหรับผู้ป่วยทั่วไป:< 140/90 mmHg<br>• กลุ่มโรคเบาหวาน, โรคหัวใจ, หรือความเสี่ยงสูงหรือผู้มีอายุ 18-65ปี:< 125/75 mmHg<br>• กลุ่มอายุ 65-79ปี หรือผู้เคยมีประวัติ stroke < 135/85 mmHg<br>• กลุ่มอายุ 80 ปีขึ้นไป: ตัวบน < 140/80 mmHg<br>• <strong>การรักษา:</strong> แพทย์จะพิจารณาจ่ายยาตามความเหมาะสมและเน้นการปรับพฤติกรรมชีวิตอย่างสม่ำเสมอ"
+                details: `<div class='space-y-3 bg-slate-900/50 p-1.5 rounded-xl border border-white/5'>
+                            <p class='font-medium text-slate-200 border-b border-white/10 pb-1 mb-2'><i class='fa-solid fa-bullseye accent-text mr-1'></i> เกณฑ์เป้าหมายความดันโลหิตเฉลี่ยที่บ้าน (HBPM)</p>
+                            <div class='space-y-2.5 text-slate-300 pl-1'>
+                                <p class='flex justify-between border-b border-dashed border-white/5 pb-1'><span>• ผู้ป่วยทั่วไป (อายุน้อยกว่า 65 ปี):</span> <span class='highlight-box'>&lt; 130/80 มม.ปรอท</span></p>
+                                <p class='flex justify-between border-b border-dashed border-white/5 pb-1'><span>• ผู้ป่วยเบาหวาน / โรคหัวใจ / เสี่ยงสูง:</span> <span class='highlight-box'>&lt; 125/75 มม.ปรอท</span></p>
+                                <p class='flex justify-between border-b border-dashed border-white/5 pb-1'><span>• ผู้สูงอายุช่วง 65 - 79 ปี (หรือเคยสโตรก):</span> <span class='highlight-box'>&lt; 135/85 มม.ปรอท</span></p>
+                                <p class='flex justify-between pb-0.5'><span>• ผู้สูงอายุวัยเก๋าอายุ 80 ปีขึ้นไป:</span> <span class='highlight-box'>&lt; 140/80 มม.ปรอท</span></p>
+                            </div>
+                         </div>
+                         <p class='text-[11px] opacity-80 pt-2 italic text-center text-purple-400'><i class='fa-solid fa-square-poll-vertical mr-1'></i> ควบคุมระดับความดันให้อยู่ในเกณฑ์เป้าหมาย เพื่อปกป้องอวัยวะภายในอย่างยั่งยืน</p>`
             },
             4: {
-                title: "ตอนที่ 4: โรคแทรกซ้อนสำคัญที่ต้องเฝ้าระวัง",
-                details: "• สมอง: อัมพฤกษ์ อัมพาต จากหลอดเลือดสมองตีบหรือแตก (Stroke)<br>• หัวใจ: กล้ามเนื้อหัวใจขาดเลือดเฉียบพลัน หัวใจโต และหัวใจล้มเหลว (Heart Failure)<br>• ไต: ภาวะไตเสื่อมเรื้อรังจนถึงขั้นไตวายเฉียบพลัน (CKD)<br>• 🚨 หากมีอาการ ปวดหัวรุนแรง ตาพร่ามัว เจ็บแน่นหน้าอก แขนขาอ่อนแรงครึ่งซีก ปากเบี้ยว ให้รีบมาโรงพยาบาลทันที"
+                title: "ตอนที่ 4: โรคแทรกซ้อนที่ควรระวัง",
+                details: `<div class='space-y-3.5'>
+                            <p class='flex gap-2 items-start'><i class='fa-solid fa-brain text-red-400 mt-1 shrink-0'></i> <span><strong class='text-slate-100 font-medium'>โรคหลอดเลือดสมอง (Stroke):</strong> ทำให้เกิดภาวะอัมพฤกษ์ อัมพาตครึ่งซีก จากหลอดเลือดสมองตีบ ตัน หรือแตก</span></p>
+                            <p class='flex gap-2 items-start'><i class='fa-solid fa-heart-pulse text-red-400 mt-1 shrink-0'></i> <span><strong class='text-slate-100 font-medium'>โรคหัวใจล้มเหลว:</strong> แรงดันที่สูงนานๆ ทำให้กล้ามเนื้อหัวใจหนาตัว โต และอ่อนแรงจนน้ำท่วมปอดได้</span></p>
+                            <p class='flex gap-2 items-start'><i class='fa-solid fa-capsules text-red-400 mt-1 shrink-0'></i> <span><strong class='text-slate-100 font-medium'>ภาวะไตเสื่อมเรื้อรัง (CKD):</strong> แรงดันสูงจะทำลายกลุ่มหลอดเลือดฝอยในไต ส่งผลให้ไตขับของเสียไม่ได้จนเข้าสู่ภาวะไตวาย</span></p>
+                            <div class='bg-red-500/10 border border-red-500/30 p-3 rounded-xl text-red-400 text-[11px] font-bold tracking-wide animate-pulse'>
+                                🚨 สัญญาณเตือนวิกฤต: ปวดหัวรุนแรง ตาพร่ามัว แน่นหน้าอก ปากเบี้ยว แขนขาอ่อนแรง ให้รีบมาตึกอุบัติเหตุ รพ.ตาคลี หรือโทร 1669 ทันที!
+                            </div>
+                          </div>`
             },
             5: {
-                title: "ตอนที่ 5: หลักการเลือกอาหารเพื่อชะลอไตเสื่อม",
-                details: "• เน้นการกินอาหารแบบ DASH Diet (เน้นผัก ผลไม้รสไม่หวาน ธัญพืชขัดสีน้อย และเนื้อสัตว์ไขมันต่ำ)<br>• จำกัดโซเดียมไม่เกิน 2,000 มิลลิกรัมต่อวัน (เทียบเท่าน้ำปลาไม่เกิน 1 ช้อนชาต่อมื้ออาหาร)<br>• หลีกเลี่ยงอาหารแปรรูป บะหมี่กึ่งสำเร็จรูป ขนมขบเคี้ยว อาหารหมักดอง และงดการเติมซอสปรุงรสหรือผงชูรสเพิ่มเติม"
+                title: "ตอนที่ 5: อาหารกับโรคความดันโลหิตสูง",
+                details: `<div class='space-y-3'>
+                            <p class='flex items-start gap-2'><i class='fa-solid fa-apple-whole text-emerald-400 mt-1 shrink-0'></i> <span>เน้นการบริโภคอาหารตามหลัก <strong class='text-slate-100 font-medium'>DASH Diet</strong> คือ เน้นผักสด ผลไม้รสไม่หวาน ธัญพืชไม่ขัดสี และเนื้อสัตว์ไขมันต่ำ เช่น เนื้อปลา</span></p>
+                            <p class='flex items-start gap-2'><i class='fa-solid fa-spoon text-amber-500 mt-1 shrink-0'></i> <span>จำกัดการกินโซเดียมไม่เกิน <span class='highlight-box'>2,000 มิลลิกรัม/วัน</span> (เทียบเท่าน้ำปลา ซอสปรุงรส ไม่เกินมื้อละ 1 ช้อนชา)</span></p>
+                            <p class='flex items-start gap-2'><i class='fa-solid fa-ban text-red-400 mt-1 shrink-0'></i> <span>งดเด็ดขาด: อาหารกึ่งสำเร็จรูป ขนมขบเคี้ยว อาหารหมักดอง แกงกะทิ และงดการเติมผงชูรสในอาหาร</span></p>
+                          </div>`
             },
             6: {
-                title: "ตอนที่ 6: การรับประทานยาอย่างปลอดภัยและถูกวิธี",
-                details: "• ต้องรับประทานยาอย่างต่อเนื่องสม่ำเสมอทุกวันตามเวลาที่แพทย์สั่งอย่างเคร่งครัด<br>• ❌ ห้ามปรับยา เพิ่มยา หรือหยุดยาเองเด็ดขาด แม้จะรู้สึกสบายดีหรือวัดความดันได้ค่าปกติแล้วก็ตาม<br>• หากลืมกินยา ให้กินทันทีที่นึกได้ แต่ถ้าใกล้ถึงเวลามื้อถัดไป ให้ข้ามมื้อที่ลืมไปเลย ห้ามเบิ้ลยาเป็นสองเท่า"
+                title: "ตอนที่ 6: ยากับโรคความดันโลหิตสูง",
+                details: `<div class='space-y-3'>
+                            <p class='flex items-start gap-2'><i class='fa-solid fa-clock text-blue-400 mt-1 shrink-0'></i> <span>ต้องรับประทานยาอย่างสม่ำเสมอ ตรงเวลาทุกวันตามแพทย์สั่งอย่างเคร่งครัด เพื่อให้ระดับยาในเลือดคงที่ควบคุมแรงดันได้ตลอดวัน</span></p>
+                            <p class='flex items-start gap-2'><i class='fa-solid fa-triangle-exclamation text-amber-500 mt-1 shrink-0'></i> <span><strong class='text-red-400 font-bold'>❌ ห้ามหยุดยาหรือปรับขนาดยาเองเด็ดขาด</strong> แม้จะรู้สึกสบายดี หรือวัดค่าความดันโลหิตได้เกณฑ์สีเขียวปกติแล้วก็ตาม</span></p>
+                            <p class='flex items-start gap-2'><i class='fa-solid fa-circle-info text-blue-400 mt-1 shrink-0'></i> <span>หากลืมกินยา ให้รีบกินทันทีที่นึกได้ แต่ถ้าใกล้ถึงเวลามื้อถัดไปแล้ว ให้ข้ามมื้อที่ลืมไปเลย ห้ามกินยาเบิ้ลเป็นสองเท่า</span></p>
+                          </div>`
             },
             7: {
-                title: "ตอนที่ 7: ไขข้อข้องใจความเชื่อที่ผิดเกี่ยวกับยาลดความดัน",
-                details: "• ❌ 'กินยาลดความดันติดต่อกันนานๆ จะทำให้ไตพัง': ไม่จริง! ยาลดความดันช่วยปกป้องไตไม่ให้เสื่อมสภาพ แต่ตัวโรคความดันสูงต่างหากที่ทำให้ไตพังหากไม่ยอมกินยา<br>• ❌ 'อาการดีขึ้นแล้ว หยุดกินยาได้': ไม่จริง! ความดันที่ปกติเกิดจากฤทธิ์ของยาควบคุมไว้ หากหยุดยา ความดันจะพุ่งสูงขึ้นฉับพลันจนอันตราย"
+                title: "ตอนที่ 7: ความเชื่อเกี่ยวกับยาลดความดันโลหิตสูง",
+                details: `<div class='space-y-3.5'>
+                            <div class='border-l-2 border-red-500 pl-3 py-0.5 bg-slate-900/40 rounded-r-xl p-2'>
+                                <p class='text-red-400 font-medium mb-1'>❌ ความเชื่อที่ผิด:</p>
+                                <p class='text-slate-300 font-light italic'>"กินยาความดันติดต่อกันนานๆ จะสะสมทำให้ไตพังหรือไตวาย"</p>
+                            </div>
+                            <div class='border-l-2 border-emerald-500 pl-3 py-0.5 bg-slate-900/40 rounded-r-xl p-2'>
+                                <p class='text-emerald-400 font-medium mb-1'>✅ ข้อเท็จจริงที่ถูกต้อง:</p>
+                                <p class='text-slate-200 font-light font-normal'>ตัวยาลดความดันมีหน้าที่ <span class='highlight-box'>'ช่วยปกป้องไต'</span> ไม่ให้เสื่อมสภาพลง แต่ตัวโรคความดันสูงต่างหากที่ทำลายกลุ่มเส้นเลือดฝอยในไตจนพัง หากเราปล่อยทิ้งไว้และไม่ยอมกินยาควบคุมค่ะ</p>
+                            </div>
+                          </div>`
             },
             8: {
                 title: "ตอนที่ 8: สถานการณ์โรคความดันโลหิตสูงในประเทศไทย",
-                details: "• ปัจจุบันคนไทยมากกว่า 14 ล้านคนป่วยเป็นโรคความดันโลหิตสูง และมีแนวโน้มเพิ่มสูงขึ้นเรื่อยๆ ในกลุ่มประชากรวัยทำงาน<br>• สถิติที่น่ากลัวคือ ผู้ป่วยมากกว่า 50% ไม่รู้ตัวว่าตนเองป่วยจนกระทั่งเกิดโรคแทรกซ้อนรุนแรงแล้ว<br>• โรงพยาบาลตาคลีตระหนักถึงปัญหานี้ จึงมุ่งเน้นการส่งเสริมระบบนวัตกรรมดิจิทัลเพื่อให้ประชาชนดูแลตนเองได้อย่างยั่งยืน"
+                details: `<div class='space-y-3'>
+                            <p class='flex items-start gap-2'><i class='fa-solid fa-users text-slate-400 mt-1 shrink-0'></i> <span>ปัจจุบันคนไทยมากกว่า <strong class='text-slate-100 font-medium'>14 ล้านคน</strong> ป่วยเป็นโรคความดันโลหิตสูง และมีแนวโน้มขยายตัวเพิ่มขึ้นในกลุ่มวัยทำงาน</span></p>
+                            <p class='flex items-start gap-2'><i class='fa-solid fa-user-slash text-slate-400 mt-1 shrink-0'></i> <span>ความน่ากลัวคือ ผู้ป่วยมากกว่า 50% <strong class='text-amber-400 font-medium'>ไม่เคยรู้ตัวว่าตนเองป่วย</strong> จนกระทั่งเกิดภาวะเส้นเลือดแตกหรือไตวายเฉียบพลัน</span></p>
+                            <p class='flex items-start gap-2'><i class='fa-solid fa-hospital text-slate-400 mt-1 shrink-0'></i> <span>รพ.ตาคลี ตระหนักถึงวิกฤตนี้ จึงได้พัฒนาระบบ <strong class='text-teal-400 font-medium'>Takhli HT Smart Care</strong> เพื่อช่วยเสริมสร้างทักษะการดูแลตนเองที่บ้านอย่างมีประสิทธิภาพ</span></p>
+                          </div>`
             }
         };
 
@@ -311,7 +365,6 @@
             if (myChart) renderChart();
         }
 
-        // 🚀 ระบบควบคุมหน้าต่างสุขศึกษา (เสถียร 100% ปลอดภัย ไร้กังวล Error)
         function showInfoModal(chapterId) {
             const data = educationalContent[chapterId];
             if(data) {
